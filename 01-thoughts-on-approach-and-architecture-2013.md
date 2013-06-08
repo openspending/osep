@@ -60,24 +60,17 @@ community but not OSM "core".
 There’s more to think through here. These are just some immediate thoughts
 
 1. The DB is not necessarily a (relational) DB
-
-   - We need something that we can reliably store into not something that does
+   * We need something that we can reliably store into not something that does
      all our analytics too. This could be flat files in s3
-
 2. Optimize ETL
-
-   - Getting data in is essential
-   - This is about people as much as tools
-   - Maximize structure and reliability
-
+   * Getting data in is essential
+   * This is about people as much as tools
+   * Maximize structure and reliability
 3. We should not care about OS.org traffic or SEO for normal users. What we
    care about is API usage.
-
-   - We should start measuring API usage asap ...
-
+   * We should start measuring API usage asap ...
 4. Enabling people to build satellite sites or embed viz is our priority
-
-   - We have made huge strides in this direction ... but we can do more
-   - E.g. why focus on satellite sites in wordpress
-   - Make it easier to get data slices
+   * We have made huge strides in this direction ... but we can do more
+   * E.g. why focus on satellite sites in wordpress
+   * Make it easier to get data slices
 
