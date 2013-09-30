@@ -2,7 +2,8 @@
 
 * **Created**: 19 April 2013
 * **Updated**: 8 June 2013
-* **Status**: Draft
+* **Accepted**: 1 August 2013
+* **Status**: Accepted
 
 This document sets out a new data processing pipeline. It draws on OSEP-01
 "Approach and Architecture" and proposes concrete changes to the core
