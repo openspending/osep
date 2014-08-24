@@ -12,7 +12,7 @@ The specification of an OpenSpending Data Package is an essential part of the
 move to a flat-file based DataStore (see OSEP 2) and [Github Issue
 669][issue-669].
 
-issue-669: https://github.com/openspending/openspending/issues/669
+[issue-669]: https://github.com/openspending/openspending/issues/669
 
 ## OpenSpending Data Package
 
