@@ -1,5 +1,10 @@
 # OpenSpending - Thoughts on Approach and Architecture
 
+* **Created**: 10 April 2013
+* **Updated**: 8 June 2013
+* **Accepted**: 
+* **Status**: Draft
+
 This document represents reflections that distil understanding (and
 thoughts) on where OpenSpending should be going with our approach and
 architecture.
