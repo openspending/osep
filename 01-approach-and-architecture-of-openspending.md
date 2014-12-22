@@ -1,12 +1,16 @@
-# OpenSpending - Thoughts on Approach and Architecture
+---
+layout: default
+title: OpenSpending - Approach and Architecture
+---
 
 * **Created**: 10 April 2013
-* **Updated**: 8 June 2013
+* **Updated**: 22 December 2014
+* **Authors**: Rufus Pollock and Tryggvi Björgvinsson
 * **Accepted**: 
 * **Status**: Draft
 
-This document represents reflections that distil understanding (and
-thoughts) on where OpenSpending should be going with our approach and
+This document represents reflections and a proposal that distil understanding
+(and thoughts) on where OpenSpending should be going in terms of approach and
 architecture.
 
 ## Purpose and Approach
@@ -60,21 +64,57 @@ API/Dumps. Viz even in the form of essential things like mapnik and tile
 production now largely happens in other projects that are a part of the
 community but not OSM "core".
 
-## Implications
+## Proposal
 
-There’s more to think through here. These are just some immediate thoughts
+The future plan for OpenSpending technical development is summarized in the
+following two diagrams (which present similar information in slightly different
+ways).
 
-1. The DB is not necessarily a (relational) DB
-   * We need something that we can reliably store into not something that does
-     all our analytics too. This could be flat files in s3
-2. Optimize ETL
+Key aspects of the proposed approach:
+
+* Clear distinction of responsibilities of OpenSpending platform technically vs
+  work done elsewhere. The demarcation largely follows the discussion above
+  with Storage, some ETL and some analytics done in OpenSpending core and the
+  majority of presentation done by third-party users. In essence we are
+  proposing a hybrid system similar to OpenStreetMap:
+
+  * Central Repository (and permissions for access) - the DataStore
+  * Presentation (and use and analysis) is distributed
+
+* Use a (micro-)services oriented architecture in which different pieces
+  of functionality are implmented in separate small service components (or
+  libraries) which are then connected together. This will make it easier to
+  contribute, easier to improve and provide a simpler and more robust
+  deployment and hosting architecture.
+  
+  * This will involve moving away from the current architecture that has all of
+    storage, analytics, presentation and visualization in one monolithic webapp
+  * As there is now freedom to implement different micro-services in different languages we make the following recommendation that services are implemented in either Python or Javascript with Python preferred for backend and Javascript for frontend.
+  
+### Components Overview
+
+<img src="img/01-tech-overview.png" alt="" style="display: block; width: 100%;" />
+
+### Components and Micro-Service Subcomponents
+
+<img src="img/01-tech-overview-subcomponents.png" alt="" />
+
+### Subcomponents Simplified with Flow of Data
+
+<img src="img/01-subcomponents-flow.png" alt="" />
+
+------
+
+## Appendix - Additional Thoughts
+
+1. Optimize ETL
    * Getting data in is essential
    * This is about people as much as tools
    * Maximize structure and reliability
-3. We should not care about OS.org traffic or SEO for normal users. What we
+2. We should not care about OS.org traffic or SEO for normal users. What we
    care about is API usage.
    * We should start measuring API usage asap ...
-4. Enabling people to build satellite sites or embed viz is our priority
+3. Enabling people to build satellite sites or embed viz is our priority
    * We have made huge strides in this direction ... but we can do more
    * E.g. why focus on satellite sites in wordpress
    * Make it easier to get data slices
