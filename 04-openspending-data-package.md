@@ -1,12 +1,12 @@
 ---
-title: An OpenSpending Data Package
+layout: default
+title: OpenSpending Data Package
+osep: 4
 created: 2013-12-08
 updated: 2014-08-25
 status: Draft
 accepted:
 ---
-
-# An OpenSpending Data Package
 
 The specification of an OpenSpending Data Package is an essential part of the
 move to a flat-file based DataStore (see OSEP 2) and [Github Issue

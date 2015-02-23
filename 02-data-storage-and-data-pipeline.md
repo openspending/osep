@@ -1,7 +1,12 @@
-# Data Storage, ETL and the Data Processing Pipeline
+---
+layout: default
+osep: 2
+title: Data Storage, ETL and the Data Processing Pipeline
+---
 
 * **Created**: 19 April 2013
 * **Updated**: 8 June 2013
+* **Authors**: Rufus Pollock
 * **Accepted**: 1 August 2013
 * **Status**: Accepted
 

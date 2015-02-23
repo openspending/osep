@@ -1,6 +1,7 @@
 ---
 layout: default
-title: OpenSpending - Approach and Architecture
+osep: 1
+title: Top Level Approach and Architecture
 ---
 
 * **Created**: 10 April 2013
