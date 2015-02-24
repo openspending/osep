@@ -2,13 +2,11 @@
 layout: default
 osep: 1
 title: Top Level Approach and Architecture
+created: 10 April 2013
+updated: 22 December 2014
+accepted: 21 February 2015
+authors: [Rufus Pollock, Tryggvi Björgvinsson]
 ---
-
-* **Created**: 10 April 2013
-* **Updated**: 22 December 2014
-* **Authors**: Rufus Pollock and Tryggvi Björgvinsson
-* **Accepted**: 21 February 2015
-* **Status**: Accepted
 
 This document represents reflections and a proposal that distil understanding
 (and thoughts) on where OpenSpending should be going in terms of approach and

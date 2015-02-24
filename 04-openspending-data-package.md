@@ -2,9 +2,9 @@
 layout: default
 title: OpenSpending Data Package
 osep: 4
-created: 2013-12-08
-updated: 2014-08-25
-status: Draft
+created: 8 December 2013
+updated: 25 August 2014
+authors: Rufus Pollock
 accepted:
 ---
 

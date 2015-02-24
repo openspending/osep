@@ -2,13 +2,12 @@
 layout: default
 osep: 2
 title: Data Storage, ETL and the Data Processing Pipeline
+created: 19 April 2013
+updated: 8 June 2013
+authors: Rufus Pollock
+accepted: 1 August 2013
 ---
 
-* **Created**: 19 April 2013
-* **Updated**: 8 June 2013
-* **Authors**: Rufus Pollock
-* **Accepted**: 1 August 2013
-* **Status**: Accepted
 
 This document sets out a new data processing pipeline. It draws on OSEP-01
 "Approach and Architecture" and proposes concrete changes to the core

@@ -1,0 +1,14 @@
+{% if page.osep %}
+<table class="table table-striped meta">
+  <tr><td>Status</td>
+    <td>
+      {% if page.accepted %}<strong>Accepted</strong> &ndash; {{page.accepted}}
+      {% else %} Draft {% endif %}
+    </td>
+  </tr>
+  <tr><td>Authors</td><td>{% for author in page.authors %}{{author}}<br />{% endfor %}</td></tr>
+  <tr><td>Last Updated</td><td>{{page.updated}}</td></tr>
+  <tr><td>Created</td><td>{{page.created}}</td></tr>
+</table>
+{% endif %}
+
