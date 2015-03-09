@@ -6,15 +6,13 @@ title: OpenSpending Enhancement Proposals (OSEP)
 {% assign sorted_pages = site.pages | sort:"name" %}
 {% for page in sorted_pages %}
   {% if page.name != 'index.md' %}
-  * [#{{page.osep}}: {{ page.title }}]({{ page.url | remove_first:'/' }})
-    (Status:
-      {% if page.accepted %}Accepted &ndash; {{page.accepted}}{% else %} Draft{% endif %})
+  * [#{{page.osep}}: {{ page.title }}]({{ page.url | remove_first:'/' }}) (Status: {% if page.accepted %}Accepted &ndash; {{page.accepted}}{% else %} Draft{% endif %})
   {% endif %}
 {% endfor %}
 
 ----
 
-## Submitting an Enhancement Proposal
+## Submitting an Enhancement Proposal
 
 Anyone can submit an Enhancement Proposal.
 
