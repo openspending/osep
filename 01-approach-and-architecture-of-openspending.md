@@ -63,7 +63,7 @@ API/Dumps. Viz even in the form of essential things like mapnik and tile
 production now largely happens in other projects that are a part of the
 community but not OSM "core".
 
-## Proposal
+## Proposal
 
 The future plan for OpenSpending technical development is summarized in the
 following two diagrams (which present similar information in slightly different
@@ -90,21 +90,21 @@ Key aspects of the proposed approach:
     storage, analytics, presentation and visualization in one monolithic webapp
   * As there is now freedom to implement different micro-services in different languages we make the following recommendation that services are implemented in either Python or Javascript with Python preferred for backend and Javascript for frontend.
   
-### Components Overview
+### Components Overview
 
 <img src="img/01-tech-overview.png" alt="" style="display: block; width: 100%;" />
 
-### Components and Micro-Service Subcomponents
+### Components and Micro-Service Subcomponents
 
 <img src="img/01-tech-overview-subcomponents.png" alt="" />
 
-### Subcomponents Simplified with Flow of Data
+### Subcomponents Simplified with Flow of Data
 
 <img src="img/01-subcomponents-flow.png" alt="" />
 
 ------
 
-## Appendix - Additional Thoughts
+## Appendix - Additional Thoughts
 
 1. Optimize ETL
    * Getting data in is essential
