@@ -1,7 +1,5 @@
-OpenSpending enhancement proposals.
+# OpenSpending Enhancement Proposals
 
-Please name proposals as {number}-title-of-proposal.md where {number} is a 2
-digit number which increments for each proposal.
+The site for the proposals is here: http://labs.openspending.org/osep/
 
-Proposals should be in markdown format.
-
+See the site for instructions on conributing.

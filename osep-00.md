@@ -48,7 +48,7 @@ There is currently no clear acceptance process for OSEPs. This needs to be defin
 
 * Each proposal must have a place for discussing the proposal. This should be accessible via a URL on the `discussion` key of the front matter.
 * Each proposal should be written in Markdown.
-
+* Each proposal should be in a file with the following naming convention: `osep-{NUMBER}.md`
 
 ## Appendix
 
