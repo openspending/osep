@@ -6,6 +6,7 @@ created: 10 April 2013
 updated: 22 December 2014
 accepted: 21 February 2015
 authors: [Rufus Pollock, Tryggvi Björgvinsson]
+redirect_from: "/01-approach-and-architecture-of-openspending.html"
 ---
 
 This document represents reflections and a proposal that distil understanding
@@ -85,11 +86,11 @@ Key aspects of the proposed approach:
   libraries) which are then connected together. This will make it easier to
   contribute, easier to improve and provide a simpler and more robust
   deployment and hosting architecture.
-  
+
   * This will involve moving away from the current architecture that has all of
     storage, analytics, presentation and visualization in one monolithic webapp
   * As there is now freedom to implement different micro-services in different languages we make the following recommendation that services are implemented in either Python or Javascript with Python preferred for backend and Javascript for frontend.
-  
+
 ### Components Overview
 
 <img src="img/01-tech-overview.png" alt="" style="display: block; width: 100%;" />
@@ -117,4 +118,3 @@ Key aspects of the proposed approach:
    * We have made huge strides in this direction ... but we can do more
    * E.g. why focus on satellite sites in wordpress
    * Make it easier to get data slices
-

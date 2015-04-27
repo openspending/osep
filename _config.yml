@@ -6,3 +6,5 @@ mailinglist: http://lists.okfn.org/mailman/listinfo/openspending-dev
 twitter: OpenSpending
 kramdown:
   input: GFM
+gems:
+  - jekyll-redirect-from

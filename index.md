@@ -5,7 +5,7 @@ title: OpenSpending Enhancement Proposals (OSEP)
 
 {% assign sorted_pages = site.pages | sort:"name" %}
 {% for page in sorted_pages %}
-  {% if page.name != 'index.md' %}
+  {% if page.name contains 'osep-' %}
   * [#{{page.osep}}: {{ page.title }}]({{ page.url | remove_first:'/' }}) (Status: {% if page.accepted %}Accepted &ndash; {{page.accepted}}{% else %} Draft{% endif %})
   {% endif %}
 {% endfor %}
@@ -18,6 +18,7 @@ Anyone can submit an Enhancement Proposal.
 
 To submit an OSEP:
 
+*
 * Create a draft document in markdown format
 * Add it to the [OSEP github respository][repo]
   * Either: sending to openspending-dev mailing list (and we will add it for you)
@@ -27,4 +28,3 @@ To submit an OSEP:
 
 An OSEP does **not have to be complete to be submitted** - you can submit an OSEP
 in draft form and then revise it with the community.
-

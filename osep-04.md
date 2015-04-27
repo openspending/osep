@@ -3,9 +3,10 @@ layout: default
 title: OpenSpending Data Package
 osep: 4
 created: 8 December 2013
-updated: 25 August 2014
-authors: Rufus Pollock
+updated: 23 April 2014
+authors: Rufus Pollock, Paul Walsh
 accepted:
+redirect_from: "/04-openspending-data-package.html"
 ---
 
 The specification of an OpenSpending Data Package is an essential part of the
@@ -39,7 +40,7 @@ datapackage.json
 data/my-financial-data.csv
 ```
 
-A more complex version may have additional files 
+A more complex version may have additional files
 
 ```
 datapackage.json
@@ -63,7 +64,7 @@ This documents the specific structure of the JSON metadata stored in the
 `datapackage.json`.
 
 * Base metadata is as per [Budget Data Package spec][bdp]
-* Subsection under key "openspending" 
+* Subsection under key "openspending"
 
 ```
 "name": ...
@@ -102,7 +103,7 @@ Specifically `openspending` entry in `datapackage.json`:
 > CSV. One may be able to automatically generate a mapping on this basis.
 > However, this may be something for a separate `mapping` generator tool.
 
-[mapping]: http://docs.openspending.org/en/latest/model/design.html#views-and-pre-defined-visualizations 
+[mapping]: http://docs.openspending.org/en/latest/model/design.html#views-and-pre-defined-visualizations
 [views]: http://docs.openspending.org/en/latest/model/design.html#views-and-pre-defined-visualizations
 
 #### Migration of Current OpenSpending Metadata
@@ -163,8 +164,7 @@ Migration of metadata is relatively simple:
 ## Extras (under discussion)
 
 * `archive` directory is for data that is not for openspending directly but is
-  useful to archive raw data files from which data was extracted 
+  useful to archive raw data files from which data was extracted
 * Note it is possible to store the data elsewhere than in data.openspending.org -
   you can have datapackage.json point to files somewhere else on the web
     (though we may still want to cache that at some point)
-

@@ -5,7 +5,8 @@ title: New DataStore in Detail
 created: 26 April 2015
 updated: 26 April 2015
 authors: [Rufus Pollock, Paul Walsh]
-accepted: 
+accepted:
+redirect_from: "/06-datastore.html"
 ---
 
 At the heart of [OSEP 1][osep1] architecture is the DataStore which is the primary repository for the datasets in OpenSpending. This document details around the DataStore component will work.
@@ -41,5 +42,3 @@ Options are:
 ```
 /datasets/{user-or-org}/{dataset-name}/
 ```
-
-

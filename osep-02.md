@@ -6,6 +6,7 @@ created: 19 April 2013
 updated: 8 June 2013
 authors: Rufus Pollock
 accepted: 1 August 2013
+redirect_from: "/02-data-storage-and-data-pipeline.html"
 ---
 
 
@@ -25,7 +26,7 @@ Key proposed changes:
   * The ETL software does not need be integrated with the code for the website,
     analytics or visualization and separating will provide a better
     componentized design allowing much easier enhancement of the relevant
-    components 
+    components
 
 ## Background
 
@@ -112,7 +113,7 @@ These are the instructions RP uses on Open Data Maker nights:
    * (basically CSV with no blank lines at the top)
    * Dates as yyyy-mm-dd
    * Currencies: remove "," but leave "."
-4. Prepare them in OpenSpending format: http://openspending.org/help/data-cleansing.html 
+4. Prepare them in OpenSpending format: http://openspending.org/help/data-cleansing.html
    * have column called time
    * have column called amount
 5. Upload the csv file somewhere (if you have had to clean up) e.g. DropBox, Google Drive, DataHub, ...
@@ -129,4 +130,3 @@ These are the instructions RP uses on Open Data Maker nights:
 9. Create a visualization (treemap or bubblemap) and share here
 10. Add your city or area to the Spending Map Spreadsheet here
     https://docs.google.com/a/okfn.org/spreadsheet/ccc?key=0AqR8dXc6Ji4JdHZZNUpWQ2paY3FfYTdFNXkxZXZDTWc#gid=0
-

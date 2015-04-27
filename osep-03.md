@@ -5,6 +5,7 @@ title: Flask web framework
 created: 30 September 2013
 updated: 30 September 2013
 authors: [Tryggvi Björgvinsson, Friedrich Lindenberg]
+redirect_from: "/03-flask-web-framework.html"
 ---
 
 This document proposes a replacement for the Pylons web framework currently being used for OpenSpending. Pylons is a deprecated (in favour of Pyramid). This document proposes Flask as a new web framework for OpenSpending.
@@ -34,7 +35,7 @@ Since Flask is a micro-framework it makes developing framework independent code 
 
 ## Alternatives
 
-There are other web frameworks that could be used instead of Flask. We list them here (not all of them) with some 
+There are other web frameworks that could be used instead of Flask. We list them here (not all of them) with some
 
 * Pyramid
     * The straight-forward migration would be to switch to Pyramid and should be considered thoroughly. It has good features and design decisions but from a contributing perspective Flask might be more known and easier to grasp for new comers.
@@ -59,4 +60,3 @@ There are other web frameworks that could be used instead of Flask. We list them
 * Look at and examine static file hierarchy setup/access: **Done**
 * Look at and examine if Webhelpers migration is necessary: Not started
 * Flask style routing: Not started
-

@@ -5,7 +5,8 @@ title: OpenSpending ETL Workflow and Modules
 created: 18 January 2015
 updated: 23 February 2015
 authors: [Rufus Pollock, Tryggvi Björgvinsson, Paul Walsh]
-accepted: 
+accepted:
+redirect_from: "/05-etl-workflow.html"
 ---
 
 This document extends OSEP 1 fleshing out detail around the ETL section of OpenSpending.
