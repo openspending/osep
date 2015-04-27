@@ -1,6 +1,7 @@
 ---
 layout: default
 osep: 6
+discussion: https://github.com/openspending/osep/issues/8
 title: New DataStore in Detail
 created: 26 April 2015
 updated: 26 April 2015

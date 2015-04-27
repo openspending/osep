@@ -1,6 +1,7 @@
 ---
 layout: default
 osep: 1
+discussion: https://github.com/openspending/osep/issues/3
 title: Top Level Approach and Architecture
 created: 10 April 2013
 updated: 22 December 2014

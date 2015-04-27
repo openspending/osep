@@ -1,6 +1,7 @@
 ---
 layout: default
 osep: 5
+discussion: https://github.com/openspending/osep/issues/7
 title: OpenSpending ETL Workflow and Modules
 created: 18 January 2015
 updated: 23 February 2015

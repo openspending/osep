@@ -1,6 +1,7 @@
 ---
 layout: default
 osep: 7
+discussion: https://github.com/openspending/osep/issues/9
 title: Aggregations and Aggregation Workflow
 created: 26 April 2015
 updated: 26 April 2015

@@ -1,6 +1,7 @@
 ---
 layout: default
 osep: 2
+discussion: https://github.com/openspending/osep/issues/4
 title: Data Storage, ETL and the Data Processing Pipeline
 created: 19 April 2013
 updated: 8 June 2013

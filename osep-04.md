@@ -2,6 +2,7 @@
 layout: default
 title: OpenSpending Data Package
 osep: 4
+discussion: https://github.com/openspending/osep/issues/6
 created: 8 December 2013
 updated: 23 April 2014
 authors: Rufus Pollock, Paul Walsh
