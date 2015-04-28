@@ -77,6 +77,18 @@ archive/my-original-data.xls
 scripts/scrape-and-clean-the-data.py
 ```
 
+And, an example of a data package with normalized data could be:
+
+```
+datapackage.json
+README.md
+
+# data files, but only the first one actually contains the spend data. It may contain references (foreign keys) to the other files.
+data/my-financial-data.csv # actually contains spend data
+data/my-list-of-entities-receiving-money.csv # data that augmented the spend data
+data/my-list-of-projects-the-money-is-associated-with.csv # additional augmenting data
+```
+
 ### Required and Recommended Data and Metadata
 
 In order for OpenSpending services to work effectively with raw data sources, we define a set of *requirements* for data and metadata, as well as a set of *recommendations* for metadata and data.
