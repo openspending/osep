@@ -91,15 +91,17 @@ data/my-list-of-projects-the-money-is-associated-with.csv # additional augmentin
 
 ### Required and Recommended Data and Metadata
 
-In order for OpenSpending services to work effectively with raw data sources, we define a set of *requirements* for data and metadata, as well as a set of *recommendations* for metadata and data.
+In order for OpenSpending services to work effectively with raw data sources, we define a set of *requirements* (`MUST` haves) for data and metadata, as well as a set of *recommendations* (`SHOULD` haves) for data and metadata.
 
-OpenSpending Data Packages are a Tabular Data Package Profile, and therefore must implement all the requirements for Tabular Data Packages.
+OpenSpending Data Packages are a Tabular Data Package Profile, and therefore they `MUST` implement all the requirements for Tabular Data Packages.
 
 See the [Data Package][dp] and [Tabular Data Package][tdp] specifications for further details.
 
-OpenSpending Data Packages should move towards full support of the [Budget Data Package][bdp] specification. However, this current proposal does not aim for this support. Budget Data Packages place most metadata on Resource objects, whereas in the current proposal, OpenSpending Data Packages place most metadata on the top-level descriptor, and expect conformity amongst all spend data resources in a single package.
+OpenSpending Data Packages `SHOULD` move towards full support of the [Budget Data Package][bdp] specification. However, this current proposal does not aim for this support.
 
-The following properties are required on the top-level descriptor:
+Budget Data Packages place most metadata on Resource objects, whereas in the current proposal, OpenSpending Data Package places most metadata on the top-level descriptor, and expects conformity amongst all spend data resources in a single package.
+
+The following properties `MUST` be on the top-level descriptor:
 
 * `name`: a url-compatible short name ("slug")
 * `title`: a human readable title
@@ -108,21 +110,25 @@ The following properties are required on the top-level descriptor:
 * `granularity`: a keyword that represents the type of spend data (See [Budget Data Package][bdp-resources])
 * `fiscalYear`: A year (See [Budget Data Package][bdp-resources])
 * `status`: A keyword that represents the status of the data (See [Budget Data Package][bdp-resources])
+* `type`: A keyword that represents the *direction* of the spend (See [Budget Data Package][bdp-resources])
 * `openspending`: a hash that provides implementation metadata for OpenSpending (see below for detailed information)
 * `resources`: an array of [Data Resources][dp-resources]
 
-The following properties are recommended on the top-level descriptor:
+The following properties `SHOULD` be on the top-level descriptor:
 
 * `location`: A valid ISO code (See [Budget Data Package][bdp-resources])
-* `type`: A keyword that represents the *direction* of the spend (See [Budget Data Package][bdp-resources])
 
-The following properties are required on each resource in `resources`:
+The following properties `MUST` be on each resource in `resources`:
 
 * `url`, `path` or `data`: which provides the actual data
 * `name`: a url-compatible short name ("slug")
+* `schema`: a [JSON Table Schema][jts] that describes the structure of the CSV
+
+The following properties `SHOULD` be on each resource in `resources`:
+
 * `title`: a human readable title
 * `description`: a human readable description of the resource contents
-* `schema`: a [JSON Table Schema][jts] that describes the structure of the CSV
+
 
 The following `fields` are required in each `schema` (and therefore, the data that the schema represents):
 
@@ -144,7 +150,7 @@ The `openspending` property is a `HASH` on the top-level descriptor, and provide
 
 For v1 of the OpenSpending Data Package we proposed to largely reuse structures from the current OpenSpending data model.
 
-The following properties are required on the `openspending` object:
+The following properties `MUST` be on the `openspending` object:
 
 * `owner`: a string which is the username of the OpenSpending account that the package belongs to
 
