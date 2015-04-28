@@ -129,21 +129,6 @@ The following properties `SHOULD` be on each resource in `resources`:
 * `title`: a human readable title
 * `description`: a human readable description of the resource contents
 
-
-The following `fields` are required in each `schema` (and therefore, the data that the schema represents):
-
-* `id` (or an *alias*): a unique identifier for this spend line
-* `amount` (or an *alias*): the monetary amount for this spend line
-
-The following `fields` are recommended in each `schema` (and therefore, the data that the schema represents):
-
-* `payee` (or an *alias*): a human readable name for the payee of this spend line
-* `payeeId` (or an *alias*): a unique identifer for the payee
-* `payer` (or an *alias*): a human readable name for the payer of this spend line
-* `payerId` (or an *alias*): a unique identifier for the payer
-
-**If aliases are used, they must be mapped in `openspending.mapping` (see below).**
-
 #### The `openspending` property
 
 The `openspending` property is a `HASH` on the top-level descriptor, and provides implementation metadata for OpenSpending.
@@ -158,6 +143,24 @@ The following properties `MAY` be present on the `openspending` object:
 
 * `spend_resources`: An `ARRAY` which is a list of Resource names, where each name `MUST` be present in the `resources` `ARRAY`. If provided, then **only** these resources are considered spend data proper. If not provided, All resources are considered spend data proper.
 * `mapping`: A `HASH` that maps *alias* field names found in the schema/data to OpenSpending fields. Each key should be a valid OpenSpending field, and each value the name of the field in the data.
+
+#### Data and Schema
+
+Each Resource has a schema for the data therein. There **are** some minimal requirements on any resource that contains spend data, but the **naming** patterns are flexible, due to the `openspending.mapping` field, as described above.
+
+A spend data resource `MUST` have the following:
+
+* A field that represents a unique identifier for each spend line. In OpenSpending, this is called `id`. If it is **not** called `id` in the resource file, then `openspending.mapping` `MUST` have a mapping for `id`.
+* A field that represents the monetary value for each spend line. In OpenSpending, this is called `amount`. If it is **not** called `amount` in the resource file, then `openspending.mapping` `MUST` have a mapping for `amount`.
+
+A spend data resource `SHOULD` have the following:
+
+* A field that represents the Payee name for each spend line. In OpenSpending, this is called `payee`. If it is **not** called `payee` in the resource file, then `openspending.mapping` `MUST` have a mapping for `payee`.
+* A field that represents the Payee ID name for each spend line. In OpenSpending, this is called `payeeId`. If it is **not** called `payeeId` in the resource file, then `openspending.mapping` `MUST` have a mapping for `payeeId`.
+* A field that represents the Payer name for each spend line. In OpenSpending, this is called `payer`. If it is **not** called `payer` in the resource file, then `openspending.mapping` `MUST` have a mapping for `payer`.
+* A field that represents the Payer ID name for each spend line. In OpenSpending, this is called `payerId`. If it is **not** called `payerId` in the resource file, then `openspending.mapping` `MUST` have a mapping for `payerId`.
+
+#### Example
 
 Here's an example of the `datapackage.json` top-level structure:
 
