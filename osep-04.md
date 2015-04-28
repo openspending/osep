@@ -18,8 +18,9 @@ OpenSpending Data Packages are a *[Profile][dp-profiles]* of the [Tabular Data P
 
 The OpenSpending Data Package specification aims to provide support for:
 
+* Mapping source data to integral parts of the OpenSpending data model (measures such as monetary values, and dimensions such as time, related entities, and so on).
 * Packaging either normalized or denormalized data sources for use in OpenSpending.
-* Packaging resources that are *referenced* by the spend data proper, but that do not actually contain spend data.
+* Packaging resources that are *referenced* by the spend data proper, but that do not actually contain spend data. This could mean, for example, rich data on the recipients of funds, or projects associated with a particular set of data.
 * Progressive enhancement of data via a range of *recommended*, but not *required* metadata, in order to address new use cases for the OpenSpending platform going forward.
 
 Leveraging [Data Package][dp] also opens up new opportunities to reuse/remix data from Open Spending with other tools and platforms in the [Frictionless Data][fd] ecosystem.
