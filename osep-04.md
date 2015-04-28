@@ -14,7 +14,7 @@ redirect_from: "/04-openspending-data-package.html"
 
 The specification of an OpenSpending Data Package is an essential part of the move to a flat-file based DataStore (see [OSEP-02][osep-02] and [OSEP-6][osep-06]) and [Github Issue 669][issue-669].
 
-OpenSpending Data Packages are a *[Profile][dp-profiles]* of the [Tabular Data Package][tdp] format, and also implement significant portions of the [Budget Data Package][bdp] specification, albeit in a different manner.
+OpenSpending Data Packages are a *[Profile][dp-profiles]* of the [Tabular Data Package][tdp] format, and also implement significant portions of the [Budget Data Package][bdp] specification, albeit in a different manner. We do plan to syncronize OpenSpending Data Package and Budget Data Package in the near future.
 
 The OpenSpending Data Package specification aims to provide support for:
 
@@ -36,7 +36,7 @@ An **OpenSpending Data Package** is a Data Package Profile that extends Tabular 
 
 OpenSpending stores spend data of both agreggate and transactional form. Currently, data is managed in a relational database. In moving to a flat file DataStore for all "raw" data in OpenSpending, we require a way to provide metadata for the data in a structured form, as well as a canonical way to access the spend data from the raw sources.
 
-Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-02][osep-02]) can rely on to access raw data.
+Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-01][osep-01]) can rely on to access raw data.
 
 Finally, we want to widen the use cases that OpenSpending can support. Part of the solution for this is to provide a way to store and reference additional data that supports the core spend data. OpenSpending Data Package provides structure for this.
 
@@ -243,6 +243,7 @@ There is no material for the appendix at present.
 
 
 [issue-669]: https://github.com/openspending/openspending/issues/669
+[osep-01]: http://labs.openspending.org/osep/osep-01.html
 [osep-02]: http://labs.openspending.org/osep/osep-02.html
 [osep-06]: http://labs.openspending.org/osep/osep-06.html
 [dp]: http://dataprotocols.org/data-packages/
