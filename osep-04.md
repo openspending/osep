@@ -158,7 +158,6 @@ The following properties `MAY` be present on the `openspending` object:
 
 * `spend_resources`: An `ARRAY` which is a list of Resource names, where each name `MUST` be present in the `resources` `ARRAY`. If provided, then **only** these resources are considered spend data proper. If not provided, All resources are considered spend data proper.
 * `mapping`: A `HASH` that maps *alias* field names found in the schema/data to OpenSpending fields. Each key should be a valid OpenSpending field, and each value the name of the field in the data.
-* `views`: `MAY` have a `views` attribute defining visualizations or views onto the data. If present, it MUST follow the structure defined in the [views specification in the OpenSpending documentation][views].
 
 Here's an example of the `datapackage.json` top-level structure:
 
