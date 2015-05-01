@@ -4,7 +4,7 @@ title: OpenSpending Data Package
 osep: 4
 discussion: https://github.com/openspending/osep/issues/6
 created: 8 December 2013
-updated: 28 April 2015
+updated: 1 May 2015
 authors: Rufus Pollock, Paul Walsh
 accepted:
 redirect_from: "/04-openspending-data-package.html"
@@ -107,16 +107,23 @@ The following properties `MUST` be on the top-level descriptor:
 * `title`: a human readable title
 * `profiles`: an array which declares the profile type(s) of the Data Package [see here][dp-profiles]
 * `currency`: a currency code for this data (See [Budget Data Package][bdp-resources])
-* `granularity`: a keyword that represents the type of spend data (See [Budget Data Package][bdp-resources])
-* `fiscalYear`: A year (See [Budget Data Package][bdp-resources])
-* `status`: A keyword that represents the status of the data (See [Budget Data Package][bdp-resources])
-* `type`: A keyword that represents the *direction* of the spend (See [Budget Data Package][bdp-resources])
 * `openspending`: a hash that provides implementation metadata for OpenSpending (see below for detailed information)
 * `resources`: an array of [Data Resources][dp-resources]
 
 The following properties `SHOULD` be on the top-level descriptor:
 
-* `location`: A valid ISO code (See [Budget Data Package][bdp-resources])
+* `location`: A valid ISO code (See [Budget Data Package][bdp-resources]), or, array of valid ISO codes
+
+> # TODO: How do we handle regions (cities, continents, etc.) that are not represented by an ISO code?
+
+The following properties `MAY` be on the top-level descriptor:
+
+* `granularity`: a keyword that represents the type of spend data (See [Budget Data Package][bdp-resources])
+* `fiscalYear`: A year (See [Budget Data Package][bdp-resources])
+* `type`: A keyword that represents the *direction* of the spend (See [Budget Data Package][bdp-resources]). If not included, `type` defaults to "expenditure"
+* `status`: A keyword that represents the status of the data (See [Budget Data Package][bdp-resources])
+
+> # TODO: Use a more descriptive name for type, and also suggest a change upstream in BDP?
 
 The following properties `MUST` be on each resource in `resources`:
 
@@ -141,8 +148,7 @@ The following properties `MUST` be on the `openspending` object:
 
 The following properties `MAY` be present on the `openspending` object:
 
-* `spend_resources`: An `ARRAY` which is a list of Resource names, where each name `MUST` be present in the `resources` `ARRAY`. If provided, then **only** these resources are considered spend data proper. If not provided, All resources are considered spend data proper.
-* `mapping`: A `HASH` that maps *alias* field names found in the schema/data to OpenSpending fields. Each key should be a valid OpenSpending field, and each value the name of the field in the data.
+* `mapping`: A `HASH` that maps *alias* field names found in the schema/data to OpenSpending fields. Each key should be a valid OpenSpending field, and each value is an `ARRAY` of strings in the format "{RESOURCE_NAME}/{FIELD_NAME}". Glob patterns `MAY` be used for the {RESOURCE_NAME} portion in order to match multiple resources.
 
 #### Data and Schema
 
@@ -175,10 +181,9 @@ Here's an example of the `datapackage.json` top-level structure:
 "fiscalYear": ...,
 "openspending": {
   "owner": "me",
-  "spend_resources": ["my-budget"]
   "mapping": {
-    "id": "pk",
-    "amount": "total"
+    "id": ["my-budget/pk"],
+    "amount": ["my-budget/total"]
   }
 }
 "resources": [
