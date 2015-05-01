@@ -114,7 +114,7 @@ The following properties `SHOULD` be on the top-level descriptor:
 
 * `location`: A valid ISO code (See [Budget Data Package][bdp-resources]), or, array of valid ISO codes
 
-# TODO: How do we handle regions (cities, continents, etc.) that are not represented by an ISO code?
+TODO: How do we handle regions (cities, continents, etc.) that are not represented by an ISO code?
 
 The following properties `MAY` be on the top-level descriptor:
 
@@ -123,7 +123,7 @@ The following properties `MAY` be on the top-level descriptor:
 * `type`: A keyword that represents the *direction* of the spend (See [Budget Data Package][bdp-resources]). If not included, `type` defaults to "expenditure"
 * `status`: A keyword that represents the status of the data (See [Budget Data Package][bdp-resources])
 
-# TODO: Use a more descriptive name for type, and also suggest a change upstream in BDP?
+TODO: Use a more descriptive name for type, and also suggest a change upstream in BDP?
 
 The following properties `MUST` be on each resource in `resources`:
 
