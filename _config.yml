@@ -5,6 +5,7 @@ authorurl: http://okfnlabs.org/
 github: http://github.com/openspending/osep/
 mailinglist: http://lists.okfn.org/mailman/listinfo/openspending-dev
 twitter: OpenSpending
+baseurl: "/osep"
 kramdown:
   input: GFM
 gems:
