@@ -432,11 +432,11 @@ id,name,description,since
     "entity": {
       "payee": {
         "id": ["budget/payee"],
-        "title": ["name"]  # note: we really want a way of saying this has be dereferenced!
+        "title": ["name"]  # note: we really want a way of saying this has been dereferenced!
       },
       "payor": {
         "id": ["budget/payor"],
-        "title": ["name"]  # note: we really want a way of saying this has be dereferenced!
+        "title": ["name"]  # note: we really want a way of saying this has been dereferenced!
       }
     }
   },
@@ -564,18 +564,18 @@ id,name,description,cofog_code
     "entity": {
       "payee": {
         "id": ["budget/payee"],
-        "title": ["name"]  # note: we really want a way of saying this has be dereferenced!
+        "title": ["name"]  # note: we really want a way of saying this has been dereferenced!
       },
       "payor": {
         "id": ["budget/payor"],
-        "title": ["name"]  # note: we really want a way of saying this has be dereferenced!
+        "title": ["name"]  # note: we really want a way of saying this has been dereferenced!
       }
     },
     "taxonomy": {
       "functional": {
         "id": ["budget/category"],
-        "title": ["name"], # note: we really want a way of saying this has be dereferenced!
-        "cofog": ["cofog_code"]   # note: we really want a way of saying this has be dereferenced!
+        "title": ["name"], # note: we really want a way of saying this has been dereferenced!
+        "cofog": ["cofog_code"]   # note: we really want a way of saying this has been dereferenced!
       }
     }
   },
