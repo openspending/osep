@@ -307,7 +307,7 @@ pk,budget,budget_date
 }
 ```
 
-# Example with entities (denormalized)
+#### Example with entities (denormalized)
 
 Here is an example with information on the payor and payee, denormalized.
 
@@ -393,7 +393,7 @@ pk,budget,budget_date,payee_id,payor_id,payee_name,payor_name
 }
 ```
 
-# Example with entities (normalized)
+#### Example with entities (normalized)
 
 Here is the same example as previous, but with the entity data normalized. That means this is also an example of an OpenSpending Data Package with a resource that is not a spend resource.
 
@@ -520,7 +520,7 @@ id,name,description,since
 }
 ```
 
-# Example with functional classification, and mapped to COFOG (normalized)
+#### Example with functional classification, and mapped to COFOG (normalized)
 
 Here we build on the previous example and add functional classification of the spend data, as well as a mapping that calssification to COFOG.
 
