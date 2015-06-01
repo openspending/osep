@@ -1,0 +1,148 @@
+{
+  "name": "my-openspending-datapackage",
+  "title": "My OpenSpending Data Package",
+  "profiles": {
+    "openspending": "*",
+    "tabular": "*"
+  },
+  "owner": "my-username",
+  "mapping": {
+    "id": "budget/pk",
+    "amount": {
+      "source": "budget/budget",
+      "currency": "USD",
+      "factor": 1
+    },
+    "date": "budget/budget_date",
+    "payee": {
+      "id": "budget/payee",
+      "title": "name"  # note: we really want a way of saying this has been dereferenced!
+    },
+    "payor": {
+      "id": "budget/payor",
+      "title": "name"  # note: we really want a way of saying this has been dereferenced!
+    },
+    "taxonomy": {
+      "functional": {
+        "id": "budget/category",
+        "title": "name", # note: we really want a way of saying this has been dereferenced!
+        "cofog": "cofog_code"   # note: we really want a way of saying this has been dereferenced!
+      }
+    }
+  },
+  "resources": [
+    {
+      "name": "budget",
+      "title": "Budget",
+      "path": "budget.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "number",
+            "format": "currency"
+          },
+          {
+            "name": "date",
+            "type": "date"
+          },
+          {
+            "name": "payee",
+            "type": "string"
+          },
+          {
+            "name": "payee",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          }
+      ],
+      "primaryKey": "id"
+      },
+      "foreignKeys": [
+        {
+          "fields": "payee",
+          "reference": {
+            "datapackage": "my-openspending-datapackage",
+            "resource": "entities",
+            "fields": "id"
+          }
+        },
+        {
+          "fields": "payor",
+          "reference": {
+            "datapackage": "my-openspending-datapackage",
+            "resource": "entities",
+            "fields": "id"
+          }
+        },
+        {
+          "fields": "category",
+          "reference": {
+            "datapackage": "my-openspending-datapackage",
+            "resource": "classification",
+            "fields": "id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "entities",
+      "title": "Entities",
+      "path": "entities.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "since",
+            "type": "date"
+          }
+      ],
+      "primaryKey": "id"
+      }
+    },
+    {
+      "name": "classification",
+      "title": "Classification",
+      "path": "classification.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "cofog_code",
+            "type": "string"
+          }
+      ],
+      "primaryKey": "id"
+      }
+    }
+  ]
+}
