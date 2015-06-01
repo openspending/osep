@@ -1,0 +1,67 @@
+{
+  "name": "my-openspending-datapackage",
+  "title": "My OpenSpending Data Package",
+  "profiles": {
+    "openspending": "*",
+    "tabular": "*"
+  },
+  "owner": "my-username",
+  "mapping": {
+    "id": "budget/pk",
+    "amount": {
+      "source": "budget/budget",
+      "currency": "USD",
+      "factor": 1
+    },
+    "date": "budget/budget_date",
+    "payee": {
+      "id": "budget/payee_id",
+      "title": "budget/payee_name"
+    },
+    "payor": {
+      "id": "budget/payor_id",
+      "title": "budget/payor_name"
+    }
+  },
+  "resources": [
+    {
+      "name": "budget",
+      "title": "Budget",
+      "path": "budget.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "number",
+            "format": "currency"
+          },
+          {
+            "name": "date",
+            "type": "date"
+          },
+          {
+            "name": "payee_id",
+            "type": "string"
+          },
+          {
+            "name": "payee_name",
+            "type": "string"
+          },
+          {
+            "name": "payor_id",
+            "type": "string"
+          },
+          {
+            "name": "payor_name",
+            "type": "string"
+          }
+      ],
+      "primaryKey": "id"
+      }
+    }
+  ]
+}
