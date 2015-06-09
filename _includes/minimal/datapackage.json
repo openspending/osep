@@ -1,0 +1,43 @@
+{
+  "name": "my-openspending-datapackage",
+  "title": "My OpenSpending Data Package",
+  "profiles": {
+    "openspending": "*",
+    "tabular": "*"
+  },
+  "owner": "my-username",
+  "mapping": {
+    "id": "budget/pk",
+    "amount": {
+      "source": "budget/budget",
+      "currency": "USD",
+      "factor": 1
+    },
+    "date": "budget/budget_date"
+  },
+  "resources": [
+    {
+      "name": "budget",
+      "title": "Budget",
+      "path": "budget.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "number",
+            "format": "currency"
+          },
+          {
+            "name": "date",
+            "type": "date"
+          }
+      ],
+      "primaryKey": "id"
+      }
+    }
+  ]
+}

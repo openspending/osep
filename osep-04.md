@@ -4,7 +4,7 @@ title: OpenSpending Data Package
 osep: 4
 discussion: https://github.com/openspending/osep/issues/6
 created: 8 December 2013
-updated: 1 May 2015
+updated: 9 June 2015
 authors: Rufus Pollock, Paul Walsh
 accepted:
 redirect_from: "/04-openspending-data-package.html"
@@ -18,14 +18,16 @@ OpenSpending Data Packages are a *[Profile][dp-profiles]* of the [Tabular Data P
 
 The OpenSpending Data Package specification aims to provide support for:
 
-* Mapping source data to integral parts of the OpenSpending data model (measures such as monetary values, and dimensions such as time, related entities, and so on).
-* Packaging either normalized or denormalized data sources for use in OpenSpending.
+* Mapping the physical model, as represented by Resources and their data files, to a logical model that can be used by various OpenSpending services.
+* Packaging both normalized and denormalized data sources for use in OpenSpending, in order to support a wider range of data sources.
 * Packaging resources that are *referenced* by the spend data proper, but that do not actually contain spend data. This could mean, for example, rich data on the recipients of funds, or projects associated with a particular set of data.
-* Progressive enhancement of data via a range of *recommended*, but not *required* metadata, in order to address new use cases for the OpenSpending platform going forward.
+* Progressive enhancement of data via a range of *recommended*, but not *required* metadata, in order to establish clear path for data providers to enhance data quality, and to address new use cases for the OpenSpending platform going forward.
 
 Leveraging [Data Package][dp] also opens up new opportunities to reuse/remix data from Open Spending with other tools and platforms in the [Frictionless Data][fd] ecosystem.
 
 ## Background
+
+### What is a Data Package?
 
 The [Data Package][dp] specifications are a family of formats for standardised publishing of data.
 
@@ -33,25 +35,39 @@ Data Packages can have *[Profiles][dp-profiles]*, which extend base specificatio
 
 [Tabular Data Package][tdp] describes a publishing standard specifically for tabular data (e.g.: CSV). [Budget Data Package][bdp] is a profile that extends Tabular Data Package to describe a publishing standard for both transactional and aggregate fiscal data.
 
+### What is an OpenSpending Data Package?
+
 An **OpenSpending Data Package** is a Data Package Profile that extends Tabular Data Package, with *spend data* resources that have a similar schema and required field set to resources in Budget Data Package.
 
-OpenSpending stores spend data of both agreggate and transactional form. Currently, data is managed in a relational database. In moving to a flat file DataStore for all "raw" data in OpenSpending, we require a way to provide metadata for the data in a structured form, as well as a canonical way to access the spend data from the raw sources.
+The OpenSpending platform stores spend data of both agreggate and transactional form. Currently, data is managed in a relational database. In moving to a flat file DataStore for all "raw" data in OpenSpending, we require a way to provide metadata for the data in a structured form, as well as a canonical way to access the spend data from the sources provided by the data packager.
 
-Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-01][osep-01]) can rely on to access raw data.
+Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-01][osep-01]) can rely on to access it.
 
 Finally, we want to widen the use cases that OpenSpending can support. Part of the solution for this is to provide a way to store and reference additional data that supports the core spend data. OpenSpending Data Package provides structure for this.
+
+### Relationship to Budget Data Package
+
+[Budget Data Package][bdp] is another specification that Open Knowledge contributes to. Budget Data Package is already in use, and has a number of partners contributing to the specification. So, why aren't we using it?
+
+1. Budget Data Package makes no distinction between the physical model and the logical model of data. This puts more responsibility on data producers to create resource files that strictly conform with the specification, right down to the naming of columns. OpenSpending Data Package provides a way to map the ideal logical model to the actual physical model.
+2. Budget Data Package *requires* some metadata, like COFOG codes, that we would rather have as *recommendations* for OpenSpending.
+3. Budget Data Package places most metadata on Resource objects, and by extension, expects that each Resource in the package is a spend data resource. OpenSpending Data Package places most metadata on the top-level descriptor, and provides support for Resources of spend data mixed with other data that supports the spend data.
+
+Our goal is that OpenSpending Data Package and Budget Data Package will eventually merge into a single specification.
 
 ## Proposal
 
 An OpenSpending Data Package is a Tabular Data Package Profile.
 
-At the bare minimum, that means:
+### What an OpenSpending Data Package looks like
 
-* Data is stored in well-structured CSV files, refered to as "resources"
-* Resources and additional metadata is provided via a `datapackage.json` descriptor
+An OpenSpending Data Package is:
+
+* A descriptor file, named `datapackage.json`, which provides metadata
+* Data stored in one or many well-structured CSV files, referred to from the Data Package descriptor in the `resources` property, where each resource represents a file and its specific metadata
 * Usually, the descriptor and the resources will be co-located in a directory, and this directory represents the "Data Package"
 
-a simple example of an OpenSpending Data Package on disk, or in the DataStore, will look like this:
+A simple example of an OpenSpending Data Package on disk, or in the DataStore, will look like this:
 
 ```
 datapackage.json
@@ -89,123 +105,305 @@ data/my-list-of-entities-receiving-money.csv # data that augmented the spend dat
 data/my-list-of-projects-the-money-is-associated-with.csv # additional augmenting data
 ```
 
-### Required and Recommended Data and Metadata
+### OpenSpending Data Package specification
 
-In order for OpenSpending services to work effectively with raw data sources, we define a set of *requirements* (`MUST` haves) for data and metadata, as well as a set of *recommendations* (`SHOULD` haves) for data and metadata.
+As stated, this specification builds on the [Data Package][dp] and [Tabular Data Package][tdp] specifications, so please reference these for further information.
 
-OpenSpending Data Packages are a Tabular Data Package Profile, and therefore they `MUST` implement all the requirements for Tabular Data Packages.
+### Top-level descriptor
 
-See the [Data Package][dp] and [Tabular Data Package][tdp] specifications for further details.
-
-OpenSpending Data Packages `SHOULD` move towards full support of the [Budget Data Package][bdp] specification. However, this current proposal does not aim for this support.
-
-Budget Data Packages place most metadata on Resource objects, whereas in the current proposal, OpenSpending Data Package places most metadata on the top-level descriptor, and expects conformity amongst all spend data resources in a single package.
+`datapackage.json` is the central file in a OpenSpending Data Package.
 
 The following properties `MUST` be on the top-level descriptor:
 
-* `name`: a url-compatible short name ("slug")
-* `title`: a human readable title
+* `name`: a url-compatible short name ("slug") for the package
+* `title`: a human readable title for the package
 * `profiles`: an array which declares the profile type(s) of the Data Package [see here][dp-profiles]
-* `currency`: a currency code for this data (See [Budget Data Package][bdp-resources])
-* `openspending`: a hash that provides implementation metadata for OpenSpending (see below for detailed information)
 * `resources`: an array of [Data Resources][dp-resources]
+* `mapping`: a hash that provides information to build out the logical model of the package
+* `owner`: The username of the account on OpenSpending that owns this package
 
 The following properties `SHOULD` be on the top-level descriptor:
 
-* `location`: A valid ISO code (See [Budget Data Package][bdp-resources]), or, array of valid ISO codes
+* `location`: A valid ISO code (See [Budget Data Package][bdp-resources]), or, an array of valid ISO codes
 
-TODO: How do we handle regions (cities, continents, etc.) that are not represented by an ISO code?
+<div class="alert alert-warning">
+  <strong>Note:</strong> The specification does not currently attempt to provide any specific ways to describe a package as a <i>government</i> budget, or the <i>type</i> of administrative body - details that would be extremely useful in order to provide a layer of analysis over spend from governing bodies. We plan to address this in a future OSEP, based on more work with real data and needs.
+</div>
 
 The following properties `MAY` be on the top-level descriptor:
 
-* `granularity`: a keyword that represents the type of spend data (See [Budget Data Package][bdp-resources])
-* `fiscalYear`: A year (See [Budget Data Package][bdp-resources])
-* `type`: A keyword that represents the *direction* of the spend (See [Budget Data Package][bdp-resources]). If not included, `type` defaults to "expenditure"
-* `status`: A keyword that represents the status of the data (See [Budget Data Package][bdp-resources])
+* `granularity`: a keyword that represents the type of spend data, being one of "aggregated" or "transactional". Defaults to "aggregated" (See [Budget Data Package][bdp-resources])
+* `direction`: A keyword that represents the *direction* of the spend, being one of "expenditure" or "revenue". Defaults to "expenditure" (See [Budget Data Package][bdp-resources]).
+* `status`: A keyword that represents the status of the data, being one of "proposed", "approved", "adjusted", or "executed". Defaults to "approved" (See [Budget Data Package][bdp-resources]).
 
-TODO: Use a more descriptive name for type, and also suggest a change upstream in BDP?
+
+In addition to the properties described above, the descriptor `MAY` contain any number of additional properties that are not declared in the specification.
+
+
+### Resources
 
 The following properties `MUST` be on each resource in `resources`:
 
 * `url`, `path` or `data`: which provides the actual data
 * `name`: a url-compatible short name ("slug")
-* `schema`: a [JSON Table Schema][jts] that describes the structure of the CSV
+* `schema`: a [JSON Table Schema][jts] that describes the types of, and relations within, the data
 
 The following properties `SHOULD` be on each resource in `resources`:
 
 * `title`: a human readable title
 * `description`: a human readable description of the resource contents
 
-#### The `openspending` property
 
-The `openspending` property is a `HASH` on the top-level descriptor, and provides implementation metadata for OpenSpending.
+### Mapping
 
-For v1 of the OpenSpending Data Package we proposed to largely reuse structures from the current OpenSpending data model.
+The mapping hash provides a way to derive our logical model from the physical model represented by the package's resources via **mapping attributes** and **attribute groups**.
 
-The following properties `MUST` be on the `openspending` object:
 
-* `owner`: a string which is the username of the OpenSpending account that the package belongs to
+#### Attributes
 
-The following properties `MAY` be present on the `openspending` object:
+Attributes must be declared as follows:
 
-* `mapping`: A `HASH` that maps *alias* field names found in the schema/data to OpenSpending fields. Each key should be a valid OpenSpending field, and each value is an `ARRAY` of strings in the format "{RESOURCE_NAME}/{FIELD_NAME}". Glob patterns `MAY` be used for the {RESOURCE_NAME} portion in order to match multiple resources.
+* IF the attribute value is a `HASH`, the hash `MUST` contain a `source` property that provides the mapping for this attribute
+* IF the attrubute value is a `HASH`, any other properties `MAY` be present. Specific attributes of the OpenSpending data model may enforce particular requirements on additional properties
+* The value of `attribute.source` `MUST` be either a `STRING` or an `ARRAY`.
+  * IF the value is a `STRING`, it is of the format "{RESOURCE_NAME}/{FIELD_NAME}". Glob patterns `MAY` be used for the {RESOURCE_NAME} portion in order to match multiple resources.
+  * IF the value is an `ARRAY`, then it is an array of complying source strings.
 
-#### Data and Schema
-
-Each Resource has a schema for the data therein. There **are** some minimal requirements on any resource that contains spend data, but the **naming** patterns are flexible, due to the `openspending.mapping` field, as described above.
-
-A spend data resource `MUST` have the following:
-
-* A field that represents a unique identifier for each spend line. In OpenSpending, this is called `id`. If it is **not** called `id` in the resource file, then `openspending.mapping` `MUST` have a mapping for `id`.
-* A field that represents the monetary value for each spend line. In OpenSpending, this is called `amount`. If it is **not** called `amount` in the resource file, then `openspending.mapping` `MUST` have a mapping for `amount`.
-
-A spend data resource `SHOULD` have the following:
-
-* A field that represents the Payee name for each spend line. In OpenSpending, this is called `payee`. If it is **not** called `payee` in the resource file, then `openspending.mapping` `MUST` have a mapping for `payee`.
-* A field that represents the Payee ID name for each spend line. In OpenSpending, this is called `payeeId`. If it is **not** called `payeeId` in the resource file, then `openspending.mapping` `MUST` have a mapping for `payeeId`.
-* A field that represents the Payer name for each spend line. In OpenSpending, this is called `payer`. If it is **not** called `payer` in the resource file, then `openspending.mapping` `MUST` have a mapping for `payer`.
-* A field that represents the Payer ID name for each spend line. In OpenSpending, this is called `payerId`. If it is **not** called `payerId` in the resource file, then `openspending.mapping` `MUST` have a mapping for `payerId`.
-
-#### Example
-
-Here's an example of the `datapackage.json` top-level structure:
+A mapping attribute looks like this:
 
 ```
-"name": ...,
-"title": ...,
-"profiles": [
-  "openspending": "*"
-},
-"currency": ...,
-"granularity": ...,
-"fiscalYear": ...,
-"openspending": {
-  "owner": "me",
-  "mapping": {
-    "id": ["my-budget/pk"],
-    "amount": ["my-budget/total"]
+# full representation, using an object and the source property
+"attribute_name": {
+  "source": "",
+  ... other properties of the attribute
+}
+
+# shorthand, directly declaring the source of the attribute
+"attribute_name": ""
+
+# a set of attributes, grouped
+"group_name": {
+  "attribute_name1": "",
+  "attribute_name2": {
+    "source": "",
+    ... other properties
   }
 }
-"resources": [
-  {
-    "name": "my-budget",
-    "title": ...,
-    "path": ...
-  },
-  {
-    "name": "my-counties",
-    "title": ...,
-    "path": ...
-  }
-]
+```
+
+
+#### Data model
+
+<div class="alert alert-warning">
+<strong>Note:</strong> The `mapping` object aims to provide the neccesary structure in which to fully support **any** mapping of the logical model to the physical model. However, OSEP-04 **does not** attempt to cover any and all possible use cases. Why? We want to be flexible to iterate on this as we work with real data and real needs.
+</div>
+
+The following properties `MUST` be on `mapping`:
+
+#### `id`
+
+* An **attribute** that uniquely identifies a transaction
+
+```
+# mapping to a single file
+"id": "budget/pk"
+
+# mapping to multiple files
+"id": ["budget1/pk", "budget2/pk"]
+```
+
+#### `amount`
+
+* An **attribute** that declares the monetary amount of this transaction
+
+Additional properties:
+
+* `currency`: Any valid ISO 4217 currency code. Defaults to `USD`.
+* `factor`: A factor by which to multiple the raw monetary values to get the real monetary amount. Defaults to `1`.
+
+```
+# mapping to a single file
+"amount": {
+  "source": "budget/budget_spend",
+  "currency": "GBP",
+  "factor": 1
+}
+
+# mapping to a single file, default to USD with a factor of 1
+"amount": "budget/budget_spend"
+
+# mapping to multiple files
+"amount": ["budget1/budget_spend", "budget2/budget_spend"]
+```
+
+#### `date`
+
+* An **attribute** that declares the date of this transaction
+
+```
+# mapping to a single file
+"date": "budget/year"
+
+# mapping to multiple files
+"date": ["budget1/year", "budget2/year"]
+```
+
+
+The following properties `SHOULD` be on `mapping`:
+
+#### `title`
+
+* An **attribute** that declares the title of this transaction
+
+```
+# mapping to a single file
+"title": "budget/name"
+
+# mapping to multiple files
+"title": ["budget1/name", "budget2/name"]
+```
+
+#### `payer`
+
+* An **attribute group** that declares the payer of this transaction
+  * Has the following attributes:
+    * `id`: (`MUST`) a unique identifier for the payer
+    * `title`: (`SHOULD`) a title or name for the payer
+    * `description`: (`MAY`) a short description of the payer
+
+```
+"payer": {
+  "id": "entities/id",
+  "title": "entities/name",
+  "description": "entities/about"
+}
+```
+
+#### `payee`
+
+* An **attribute group** that declares the payee of this transaction
+  * Has the following attributes:
+    * `id`: (`MUST`) a unique identifier for the payee
+    * `title`: (`SHOULD`) a title or name for the payee
+    * `description`: (`MAY`) a short description of the payee
+
+```
+"payee": {
+  "id": "entities/id",
+  "title": "entities/name",
+  "description": "entities/about"
+}
+```
+
+#### `function`
+
+* An **attribute group** that declares the functional classification of this transaction
+  * Has the following attributes:
+    * `id`: (`MUST`) a unique identifier for the functional classification
+    * `title`: (`SHOULD`) a title or name for the functional classification
+    * `description`: (`MAY`) a short description of the functional classification
+    * `cofog`: (`MAY`) a [COFOG][cofog] code that maps to this functional classification
+
+```
+"function": {
+  "id": "budget_tree/id",
+  "title": "budget_tree/title",
+  "description": "budget_tree/summary",
+  "cofog": "budget_tree/cofog_code"
+}
+```
+
+#### `description`
+
+* An **attribute** that declares the text description of this transaction
+
+```
+# mapping to a single file
+"description": "budget/notes"
+
+# mapping to multiple files
+"description": ["budget1/notes", "budget2/notes"]
+```
+
+### Examples
+
+How does this all come together?
+
+#### Minimal example
+
+Here is the most basic example of an OpenSpending Data Package. The example describes a package that only has transactional data, with only required fields.
+
+```
+# budget.csv
+{% include minimal/budget.csv %}
+
+# datapackage.json
+{% include minimal/datapackage.json %}
+```
+
+#### Minimal with spend over multiple files example
+
+Here is an example with spend data spread over multiple files. This demonstrates mapping of attributes over multiple physical sources.
+
+```
+# budget1.csv
+{% include multiple/budget1.csv %}
+
+# budget2.csv
+{% include multiple/budget2.csv %}
+
+# datapackage.json
+{% include multiple/datapackage.json %}
+```
+
+#### Example with entities (denormalized)
+
+Here is an example with information on the payor and payee, denormalized.
+
+```
+# budget.csv
+{% include entities-denormalized/budget.csv %}
+
+# datapackage.json
+{% include entities-denormalized/datapackage.json %}
+```
+
+#### Example with entities (normalized)
+
+Here is the same example as previous, but with the entity data normalized. That means this is also an example of an OpenSpending Data Package with a resource that is not a spend resource.
+
+```
+# budget.csv
+{% include entities-normalized/budget.csv %}
+
+# entities.csv
+{% include entities-normalized/entities.csv %}
+
+# datapackage.json
+{% include entities-normalized/datapackage.json %}
+```
+
+#### Example with functional classification, and mapped to COFOG (normalized)
+
+Here we build on the previous example and add functional classification of the spend data, as well as a mapping that classification to COFOG.
+
+```
+# budget.csv
+{% include with-classification/budget.csv %}
+
+# entities.csv
+{% include with-classification/entities.csv %}
+
+# classification.csv
+{% include with-classification/classification.csv %}
+
+# datapackage.json
+{% include with-classification/datapackage.json %}
 ```
 
 ### Migration of Current OpenSpending Metadata
 
-Full [documentation of the current OpenSpending JSON data model is
-here][current]. The top-level structure is as follows:
-
-[current]: http://docs.openspending.org/en/latest/model/design.html
+Full [documentation of the current OpenSpending JSON data model is here][current-model]. The top-level structure is as follows:
 
 ```
 {
@@ -225,7 +423,7 @@ You can retrieve this information for each dataset by visiting:
 
     https://openspending.org/{dataset}/model.json
 
-You can just the dataset information by visiting:
+You can just get the dataset information by visiting:
 
     http://openspending.org/{dataset}.json
 
@@ -239,8 +437,8 @@ Migration of metadata is relatively simple:
   * `description` no change
   * `languages` => ??
   * `territories` => ??
-* `mapping` - moves to `openspending.mapping`
-* `views` - moves to `openspending.views`
+* `mapping` => `mapping`
+* `views` => ??
 
 ### Structuring Data
 
@@ -282,3 +480,6 @@ There is no material for the appendix at present.
 [mapping]: http://docs.openspending.org/en/latest/model/design.html#views-and-pre-defined-visualizations
 [views]: http://docs.openspending.org/en/latest/model/design.html#views-and-pre-defined-visualizations
 [jts]: http://dataprotocols.org/json-table-schema/
+[current-model]: http://docs.openspending.org/en/latest/model/design.html
+[cofog]: http://unstats.un.org/unsd/cr/registry/regcst.asp?Cl=4
+[imf-budget]: http://www.imf.org/external/pubs/ft/tnm/2009/tnm0906.pdf
