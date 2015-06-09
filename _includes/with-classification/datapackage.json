@@ -22,12 +22,10 @@
       "id": "budget/payor",
       "title": "name"  # note: we really want a way of saying this has been dereferenced!
     },
-    "taxonomy": {
-      "functional": {
-        "id": "budget/category",
-        "title": "name", # note: we really want a way of saying this has been dereferenced!
-        "cofog": "cofog_code"   # note: we really want a way of saying this has been dereferenced!
-      }
+    "function": {
+      "id": "budget/category",
+      "title": "name", # note: we really want a way of saying this has been dereferenced!
+      "cofog": "cofog_code"   # note: we really want a way of saying this has been dereferenced!
     }
   },
   "resources": [

@@ -4,7 +4,7 @@ title: OpenSpending Data Package
 osep: 4
 discussion: https://github.com/openspending/osep/issues/6
 created: 8 December 2013
-updated: 31 May 2015
+updated: 9 June 2015
 authors: Rufus Pollock, Paul Walsh
 accepted:
 redirect_from: "/04-openspending-data-package.html"
@@ -41,7 +41,7 @@ An **OpenSpending Data Package** is a Data Package Profile that extends Tabular 
 
 The OpenSpending platform stores spend data of both agreggate and transactional form. Currently, data is managed in a relational database. In moving to a flat file DataStore for all "raw" data in OpenSpending, we require a way to provide metadata for the data in a structured form, as well as a canonical way to access the spend data from the sources provided by the data packager.
 
-Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-01][osep-01]) can rely on to access raw data.
+Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-01][osep-01]) can rely on to access it.
 
 Finally, we want to widen the use cases that OpenSpending can support. Part of the solution for this is to provide a way to store and reference additional data that supports the core spend data. OpenSpending Data Package provides structure for this.
 
@@ -127,7 +127,7 @@ The following properties `SHOULD` be on the top-level descriptor:
 * `location`: A valid ISO code (See [Budget Data Package][bdp-resources]), or, an array of valid ISO codes
 
 <div class="alert alert-warning">
-  <strong>Note:</strong> The specification does not currently attempt to provide any specific ways to describe a package as a *government* budget, or the *type* of administrative body - details that would be extremely useful in order to provide a layer of analysis over spend from governing bodies. We plan to address this in a future OSEP, based on more work with real data and needs.
+  <strong>Note:</strong> The specification does not currently attempt to provide any specific ways to describe a package as a <i>government</i> budget, or the <i>type</i> of administrative body - details that would be extremely useful in order to provide a layer of analysis over spend from governing bodies. We plan to address this in a future OSEP, based on more work with real data and needs.
 </div>
 
 The following properties `MAY` be on the top-level descriptor:
@@ -156,93 +156,174 @@ The following properties `SHOULD` be on each resource in `resources`:
 
 ### Mapping
 
-The mapping hash provides a way to derive our logical model from the physical model represented by the package's resources. The mapping is based around OpenSpending's four model types. Not all model types are required.
+The mapping hash provides a way to derive our logical model from the physical model represented by the package's resources via **mapping attributes** and **attribute groups**.
 
-#### Model types
-
-The following properties `MUST` be on the `mapping` hash:
-
-* `transaction`: A hash of the key measures and attributes of the spend data that the package describes
-
-The following properties `SHOULD` be on the `mapping` hash:
-
-* `taxonomy`: a hash of the classification system(s) used in the spend data that the package describes
-
-The following properties `MAY` be on the `mapping` hash:
-
-* `entity`: a hash of the entities that are paid or paying in the spend data that the package describes
-* `project`: a hash of the projects that provide context for the transactions that the package describes
 
 #### Attributes
 
-Each model type `MUST` have an `attributes` hash, where each key represents a field in the logical model, and the value is an array of strings in the physical model that provide this data. Each string in this array is of the format "{RESOURCE_NAME}/{FIELD_NAME}". Glob patterns `MAY` be used for the {RESOURCE_NAME} portion in order to match multiple resources.
+Attributes must be declared as follows:
 
-Each model type is described in detail below.
+* IF the attribute value is a `HASH`, the hash `MUST` contain a `source` property that provides the mapping for this attribute
+* IF the attrubute value is a `HASH`, any other properties `MAY` be present. Specific attributes of the OpenSpending data model may enforce particular requirements on additional properties
+* The value of `attribute.source` `MUST` be either a `STRING` or an `ARRAY`.
+  * IF the value is a `STRING`, it is of the format "{RESOURCE_NAME}/{FIELD_NAME}". Glob patterns `MAY` be used for the {RESOURCE_NAME} portion in order to match multiple resources.
+  * IF the value is an `ARRAY`, then it is an array of complying source strings.
 
-#### Transaction
+A mapping attribute looks like this:
 
-The following properties `MUST` be on the `transaction` hash:
+```
+# full representation, using an object and the source property
+"attribute_name": {
+  "source": "",
+  ... other properties of the attribute
+}
 
-* `value`: a hash that provides information on the monetary values described by the data package
-  * `currency`: any valid ISO 4217 currency code
-  * `factor`: a factor by which to multiple the raw monetary values to get the real monetary amount. Defaults to 1
-* `attributes`: is a hash with the following properties:
-  * `id`: (`MUST`) a unique identifier for the transaction
-  * `amount`: (`MUST`) a monetary amount for the transaction
-  * `date`: (`MUST`) a date for the transaction
-  * `title`: (`SHOULD`) a title or name for the transaction
-  * `description`: (`MAY`) a short description of the transaction
+# shorthand, directly declaring the source of the attribute
+"attribute_name": ""
 
-#### Entity
+# a set of attributes, grouped
+"group_name": {
+  "attribute_name1": "",
+  "attribute_name2": {
+    "source": "",
+    ... other properties
+  }
+}
+```
 
-The following properties `MUST` be on the `entity` hash, if the entity hash is present:
 
-* `attributes`: is a hash with the following properties:
-  * `payer`:
+#### Data model
+
+<div class="alert alert-warning">
+<strong>Note:</strong> The `mapping` object aims to provide the neccesary structure in which to fully support **any** mapping of the logical model to the physical model. However, OSEP-04 **does not** attempt to cover any and all possible use cases. Why? We want to be flexible to iterate on this as we work with real data and real needs.
+</div>
+
+The following properties `MUST` be on `mapping`:
+
+#### `id`
+
+* An **attribute** that uniquely identifies a transaction
+
+```
+# mapping to a single file
+"id": "budget/pk"
+
+# mapping to multiple files
+"id": ["budget1/pk", "budget2/pk"]
+```
+
+#### `amount`
+
+* An **attribute** that declares the monetary amount of this transaction
+
+Additional properties:
+
+* `currency`: Any valid ISO 4217 currency code. Defaults to `USD`.
+* `factor`: A factor by which to multiple the raw monetary values to get the real monetary amount. Defaults to `1`.
+
+```
+# mapping to a single file
+"amount": {
+  "source": "budget/budget_spend",
+  "currency": "GBP",
+  "factor": 1
+}
+
+# mapping to a single file, default to USD with a factor of 1
+"amount": "budget/budget_spend"
+
+# mapping to multiple files
+"amount": ["budget1/budget_spend", "budget2/budget_spend"]
+```
+
+#### `date`
+
+* An **attribute** that declares the date of this transaction
+
+```
+# mapping to a single file
+"date": "budget/year"
+
+# mapping to multiple files
+"date": ["budget1/year", "budget2/year"]
+```
+
+
+The following properties `SHOULD` be on `mapping`:
+
+#### `title`
+
+* An **attribute** that declares the title of this transaction
+
+```
+# mapping to a single file
+"title": "budget/name"
+
+# mapping to multiple files
+"title": ["budget1/name", "budget2/name"]
+```
+
+#### `payer`
+
+* An **attribute group** that declares the payer of this transaction
+  * Has the following attributes:
     * `id`: (`MUST`) a unique identifier for the payer
     * `title`: (`SHOULD`) a title or name for the payer
     * `description`: (`MAY`) a short description of the payer
-  * `payee`:
+
+```
+"payer": {
+  "id": "entities/id",
+  "title": "entities/name",
+  "description": "entities/about"
+}
+```
+
+#### `payee`
+
+* An **attribute group** that declares the payee of this transaction
+  * Has the following attributes:
     * `id`: (`MUST`) a unique identifier for the payee
     * `title`: (`SHOULD`) a title or name for the payee
     * `description`: (`MAY`) a short description of the payee
 
-#### Taxonomy
+```
+"payee": {
+  "id": "entities/id",
+  "title": "entities/name",
+  "description": "entities/about"
+}
+```
 
-Following from this [IMF document][imf-budget] on budget classification, we identify 3 classification types:
+#### `function`
 
-* **Functional**: categorisation according to purpose and objective
-* **Economic**: categorisation according to type (salaries, transfers, goods and services)
-* **Administrative**: categorisation according to administering entity
-
-The following properties `MUST` be on the `taxonomy` hash, if the taxonomy hash is present:
-
-* `attributes`: is a hash with at least one of the following properties:
-  * `functional`:
+* An **attribute group** that declares the functional classification of this transaction
+  * Has the following attributes:
     * `id`: (`MUST`) a unique identifier for the functional classification
     * `title`: (`SHOULD`) a title or name for the functional classification
     * `description`: (`MAY`) a short description of the functional classification
-    * `cofog`: (`SHOULD`) a [COFOG][cofog] code that maps to this functional classification
-  * `economic`:
-    * `id`: (`MUST`) a unique identifier for the transaction
-    * `title`: (`SHOULD`) a title or name for the transaction
-    * `description`: (`MAY`) a short description of the transaction
-  * `administrative`:
-    * `id`: (`MUST`) a unique identifier for the transaction
-    * `title`: (`SHOULD`) a title or name for the transaction
-    * `description`: (`MAY`) a short description of the transaction
+    * `cofog`: (`MAY`) a [COFOG][cofog] code that maps to this functional classification
 
-#### Project
+```
+"function": {
+  "id": "budget_tree/id",
+  "title": "budget_tree/title",
+  "description": "budget_tree/summary",
+  "cofog": "budget_tree/cofog_code"
+}
+```
 
-The following properties `MUST` be on the `project` hash, if the project hash is present:
+#### `description`
 
-* `attributes`: is a hash with the following properties:
-  * `id`: (`MUST`) a unique identifier for the transaction
-  * `amount`: (`MUST`) a monetary amount for the transaction
-  * `date`: (`MUST`) a date for the transaction
-  * `title`: (`SHOULD`) a title or name for the transaction
-  * `description`: (`MAY`) a short description of the transaction
+* An **attribute** that declares the text description of this transaction
 
+```
+# mapping to a single file
+"description": "budget/notes"
+
+# mapping to multiple files
+"description": ["budget1/notes", "budget2/notes"]
+```
 
 ### Examples
 
@@ -254,57 +335,25 @@ Here is the most basic example of an OpenSpending Data Package. The example desc
 
 ```
 # budget.csv
-pk,budget,budget_date
-1,10000,01/01/2015
+{% include minimal/budget.csv %}
 
 # datapackage.json
-{
-  "name": "my-openspending-datapackage",
-  "title": "My OpenSpending Data Package",
-  "profiles": [
-    "openspending": "*",
-    "tabular": "*"
-  ],
-  "owner": "my-username",
-  "mapping": {
-    "transaction": {
-      "value": {
-        "currency": "USD",
-        "factor": 1
-      },
-      "attributes": {
-        "id": ["budget/pk"],
-        "amount": ["budget/budget"],
-        "date": ["budget/budget_date"]
-      }
-    }
-  },
-  "resources": [
-    {
-      "name": "budget",
-      "title": "Budget",
-      "path": "budget.csv",
-      "schema": {
-        "fields": [
-          {
-            "name": "id",
-            "type": "string"
-          },
-          {
-            "name": "amount",
-            "type": "number",
-            "format": "currency"
-          },
-          {
-            "name": "date",
-            "type": "date"
-          }
-      ],
-      "primaryKey": "id"
-      }
-    }
-  ]
-}
+{% include minimal/datapackage.json %}
+```
+
+#### Minimal with spend over multiple files example
+
+Here is an example with spend data spread over multiple files. This demonstrates mapping of attributes over multiple physical sources.
+
+```
+# budget1.csv
+{% include multiple/budget1.csv %}
+
+# budget2.csv
+{% include multiple/budget2.csv %}
+
+# datapackage.json
+{% include multiple/datapackage.json %}
 ```
 
 #### Example with entities (denormalized)
@@ -313,84 +362,10 @@ Here is an example with information on the payor and payee, denormalized.
 
 ```
 # budget.csv
-pk,budget,budget_date,payee_id,payor_id,payee_name,payor_name
-1,10000,01/01/2015,1,2,Acme 1,Acme 2
-2,20000,01/02/2015,1,2,Acme 1,Acme 2
+{% include entities-denormalized/budget.csv %}
 
 # datapackage.json
-{
-  "name": "my-openspending-datapackage",
-  "title": "My OpenSpending Data Package",
-  "profiles": [
-    "openspending": "*",
-    "tabular": "*"
-  ],
-  "owner": "my-username",
-  "mapping": {
-    "transaction": {
-      "value": {
-        "currency": "USD",
-        "factor": 1
-      },
-      "attributes": {
-        "id": ["budget/pk"],
-        "amount": ["budget/budget"],
-        "date": ["budget/budget_date"]
-      }
-    },
-    "entity": {
-      "payee": {
-        "id": ["budget/payee_id"],
-        "title": ["budget/payee_name"]
-      },
-      "payor": {
-        "id": ["budget/payor_id"],
-        "title": ["budget/payor_name"]
-      }
-    }
-  },
-  "resources": [
-    {
-      "name": "budget",
-      "title": "Budget",
-      "path": "budget.csv",
-      "schema": {
-        "fields": [
-          {
-            "name": "id",
-            "type": "string"
-          },
-          {
-            "name": "amount",
-            "type": "number",
-            "format": "currency"
-          },
-          {
-            "name": "date",
-            "type": "date"
-          },
-          {
-            "name": "payee_id",
-            "type": "string"
-          },
-          {
-            "name": "payee_name",
-            "type": "string"
-          },
-          {
-            "name": "payor_id",
-            "type": "string"
-          },
-          {
-            "name": "payor_name",
-            "type": "string"
-          }
-      ],
-      "primaryKey": "id"
-      }
-    }
-  ]
-}
+{% include entities-denormalized/datapackage.json %}
 ```
 
 #### Example with entities (normalized)
@@ -399,276 +374,31 @@ Here is the same example as previous, but with the entity data normalized. That 
 
 ```
 # budget.csv
-pk,budget,budget_date,payee,payor
-1,10000,01/01/2015,1,2
-2,20000,01/02/2015,1,2
+{% include entities-normalized/budget.csv %}
 
 # entities.csv
-id,name,description,since
-1,Acme 1,They are the first acme company,1973
-2,Acme 2,They are the sceond acme company,1974
+{% include entities-normalized/entities.csv %}
 
 # datapackage.json
-{
-  "name": "my-openspending-datapackage",
-  "title": "My OpenSpending Data Package",
-  "profiles": [
-    "openspending": "*",
-    "tabular": "*"
-  ],
-  "owner": "my-username",
-  "mapping": {
-    "transaction": {
-      "value": {
-        "currency": "USD",
-        "factor": 1
-      },
-      "attributes": {
-        "id": ["budget/pk"],
-        "amount": ["budget/budget"],
-        "date": ["budget/budget_date"]
-      }
-    },
-    "entity": {
-      "payee": {
-        "id": ["budget/payee"],
-        "title": ["name"]  # note: we really want a way of saying this has been dereferenced!
-      },
-      "payor": {
-        "id": ["budget/payor"],
-        "title": ["name"]  # note: we really want a way of saying this has been dereferenced!
-      }
-    }
-  },
-  "resources": [
-    {
-      "name": "budget",
-      "title": "Budget",
-      "path": "budget.csv",
-      "schema": {
-        "fields": [
-          {
-            "name": "id",
-            "type": "string"
-          },
-          {
-            "name": "amount",
-            "type": "number",
-            "format": "currency"
-          },
-          {
-            "name": "date",
-            "type": "date"
-          },
-          {
-            "name": "payee",
-            "type": "string"
-          },
-          {
-            "name": "payee",
-            "type": "string"
-          }
-      ],
-      "primaryKey": "id"
-      },
-      "foreignKeys": [
-        {
-          "fields": "payee",
-          "reference": {
-            "datapackage": "my-openspending-datapackage",
-            "resource": "entities",
-            "fields": "id"
-          }
-        },
-        {
-          "fields": "payor",
-          "reference": {
-            "datapackage": "my-openspending-datapackage",
-            "resource": "entities",
-            "fields": "id"
-          }
-        }
-      ]
-    },
-    {
-      "name": "entities",
-      "title": "Entities",
-      "path": "entities.csv",
-      "schema": {
-        "fields": [
-          {
-            "name": "id",
-            "type": "string"
-          },
-          {
-            "name": "title",
-            "type": "string"
-          },
-          {
-            "name": "description",
-            "type": "string"
-          },
-          {
-            "name": "since",
-            "type": "date"
-          }
-      ],
-      "primaryKey": "id"
-      }
-    }
-  ]
-}
+{% include entities-normalized/datapackage.json %}
 ```
 
 #### Example with functional classification, and mapped to COFOG (normalized)
 
-Here we build on the previous example and add functional classification of the spend data, as well as a mapping that calssification to COFOG.
+Here we build on the previous example and add functional classification of the spend data, as well as a mapping that classification to COFOG.
 
 ```
 # budget.csv
-pk,budget,budget_date,payee,payor,category
-1,10000,01/01/2015,1,2,1
-2,20000,01/02/2015,1,2,2
+{% include with-classification/budget.csv %}
 
 # entities.csv
-id,name,description,since
-1,Acme 1,They are the first acme company,1973
-2,Acme 2,They are the sceond acme company,1974
+{% include with-classification/entities.csv %}
 
 # classification.csv
-id,name,description,cofog_code
-1,Rubbish Disposal,Cleaning the rubbish,05.1
-2,River regeneration,Cleaning the river,05.4
+{% include with-classification/classification.csv %}
 
 # datapackage.json
-{
-  "name": "my-openspending-datapackage",
-  "title": "My OpenSpending Data Package",
-  "profiles": [
-    "openspending": "*",
-    "tabular": "*"
-  ],
-  "owner": "my-username",
-  "mapping": {
-    "transaction": {
-      "value": {
-        "currency": "USD",
-        "factor": 1
-      },
-      "attributes": {
-        "id": ["budget/pk"],
-        "amount": ["budget/budget"],
-        "date": ["budget/budget_date"]
-      }
-    },
-    "entity": {
-      "payee": {
-        "id": ["budget/payee"],
-        "title": ["name"]  # note: we really want a way of saying this has been dereferenced!
-      },
-      "payor": {
-        "id": ["budget/payor"],
-        "title": ["name"]  # note: we really want a way of saying this has been dereferenced!
-      }
-    },
-    "taxonomy": {
-      "functional": {
-        "id": ["budget/category"],
-        "title": ["name"], # note: we really want a way of saying this has been dereferenced!
-        "cofog": ["cofog_code"]   # note: we really want a way of saying this has been dereferenced!
-      }
-    }
-  },
-  "resources": [
-    {
-      "name": "budget",
-      "title": "Budget",
-      "path": "budget.csv",
-      "schema": {
-        "fields": [
-          {
-            "name": "id",
-            "type": "string"
-          },
-          {
-            "name": "amount",
-            "type": "number",
-            "format": "currency"
-          },
-          {
-            "name": "date",
-            "type": "date"
-          },
-          {
-            "name": "payee",
-            "type": "string"
-          },
-          {
-            "name": "payee",
-            "type": "string"
-          },
-          {
-            "name": "category",
-            "type": "string"
-          }
-      ],
-      "primaryKey": "id"
-      },
-      "foreignKeys": [
-        {
-          "fields": "payee",
-          "reference": {
-            "datapackage": "my-openspending-datapackage",
-            "resource": "entities",
-            "fields": "id"
-          }
-        },
-        {
-          "fields": "payor",
-          "reference": {
-            "datapackage": "my-openspending-datapackage",
-            "resource": "entities",
-            "fields": "id"
-          }
-        },
-        {
-          "fields": "category",
-          "reference": {
-            "datapackage": "my-openspending-datapackage",
-            "resource": "classification",
-            "fields": "id"
-          }
-        }
-      ]
-    },
-    {
-      "name": "entities",
-      "title": "Entities",
-      "path": "entities.csv",
-      "schema": {
-        "fields": [
-          {
-            "name": "id",
-            "type": "string"
-          },
-          {
-            "name": "title",
-            "type": "string"
-          },
-          {
-            "name": "description",
-            "type": "string"
-          },
-          {
-            "name": "since",
-            "type": "date"
-          }
-      ],
-      "primaryKey": "id"
-      }
-    }
-  ]
-}
+{% include with-classification/datapackage.json %}
 ```
 
 ### Migration of Current OpenSpending Metadata
