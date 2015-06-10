@@ -5,7 +5,7 @@ discussion: https://github.com/openspending/osep/issues/11
 title: OSEP Guidelines
 created: 27 April 2015
 updated: 27 April 2015
-accepted:
+accepted: 10 June 2015
 authors: [Paul Walsh]
 ---
 
