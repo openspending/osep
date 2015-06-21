@@ -7,20 +7,24 @@ created: 10 April 2013
 updated: 22 December 2014
 accepted: 21 February 2015
 authors: [Rufus Pollock, Tryggvi Björgvinsson]
-redirect_from: "/01-approach-and-architecture-of-openspending.html"
+redirect from: "/01-approach-and-architecture-of-openspending.html"
 ---
+
+## Overview
 
 This document represents reflections and a proposal that distil understanding
 (and thoughts) on where OpenSpending should be going in terms of approach and
 architecture.
 
-## Purpose and Approach
+## Background
 
-Single statement summary:
+To properly understand the specific proposal of this OSEP is important to
+understand that it reflects an underlying "philosophy" as to how OpenSpending
+as a whole should work. The single statement summary for this would be:
 
 > We want to centralize data but decentralize "presentation" ("views")
 
-By "presentation" (views) I mean presentations of that data to people in the
+By "presentation" (views) we mean presentations of that data to people in the
 broadest sense - it could be a visualization and discussion in a news article
 or a dedicated site like Where Does My Money Go.
 
@@ -29,8 +33,8 @@ To elaborate this a bit, it means:
 1. OS provides a single central repository of open data on government (and
    corporate) finances
 2. OS provides good access (APIs, dumps) but quite basic presentation of that
-   data (browser, some viz)
-3. Most of the presentation of that data happens on non-OS sites but using OS
+   data (browser, some viz, some textual summary)
+3. Most of the "presentation" of that data happens on non-OS sites but using OS
    data (via the API, via dump etc)
 
 Some of 3 may be done by members of the "OpenSpending" community and we care a
