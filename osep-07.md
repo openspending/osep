@@ -66,6 +66,8 @@ Reading:
 * Data Warehouse Toolkit, 2nd Edition, Kimball and Ross
 * [On the Computation of Multidimensional Aggregates by Agarwal et al 1996 (VLDB)][agg]
 * Data Mining - Concepts and Techniques, Han and Kamber, 2nd Edition - especially chapter 4
+* [Data Cube Materialization and Mining over MapReduce][nandi] by Nandi, Yu, Bohannon and Ramakrishnan, IEEE Transactions on Knowledge and Data Engineering (Vol. 6, No. 1, Jan 2012)
 
 [agg]: http://www.vldb.org/conf/1996/P506.PDF
+[nandi]: http://arnab.org/files/nandi_distributed_cubing.pdf
 
