@@ -228,11 +228,19 @@ Additional properties:
   "factor": 1
 }
 
-# mapping to a single file, default to USD with a factor of 1
-"amount": "budget/budget_spend"
+# mapping to a single file in USD with a default factor of 1
+"amount": { 
+  "source": "budget/budget_spend",
+  "currency": "USD"
+}
 
 # mapping to multiple files
-"amount": ["budget1/budget_spend", "budget2/budget_spend"]
+"amount": [
+  { "source": "budget1/budget_spend"
+    "currency": "GBP" },
+  { "source": "budget2/budget_spend",
+    "currency": "GBP" }
+]
 ```
 
 #### `date`
