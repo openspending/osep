@@ -120,7 +120,6 @@ The following properties `MUST` be on the top-level descriptor:
 * `profiles`: an array which declares the profile type(s) of the Data Package [see here][dp-profiles]
 * `resources`: an array of [Data Resources][dp-resources]
 * `mapping`: a hash that provides information to build out the logical model of the package
-* `owner`: The username of the account on OpenSpending that owns this package
 
 The following properties `SHOULD` be on the top-level descriptor:
 
