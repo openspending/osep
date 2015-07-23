@@ -217,8 +217,8 @@ The following properties `MUST` be on `mapping`:
 
 Additional properties:
 
-* `currency`: Any valid ISO 4217 currency code. Defaults to `USD`.
-* `factor`: A factor by which to multiple the raw monetary values to get the real monetary amount. Defaults to `1`.
+* `currency`: (`MUST`) Any valid ISO 4217 currency code.
+* `factor`: (`MAY`) A factor by which to multiple the raw monetary values to get the real monetary amount, eg `1000`. Defaults to `1`.
 
 ```
 # mapping to a single file
