@@ -4,7 +4,7 @@ title: OpenSpending Data Package
 osep: 4
 discussion: https://github.com/openspending/osep/issues/6
 created: 8 December 2013
-updated: 9 June 2015
+updated: 23 July 2015
 authors: Rufus Pollock, Paul Walsh
 accepted:
 redirect_from: "/04-openspending-data-package.html"
@@ -117,7 +117,7 @@ The following properties `MUST` be on the top-level descriptor:
 
 * `name`: a url-compatible short name ("slug") for the package
 * `title`: a human readable title for the package
-* `profiles`: an array which declares the profile type(s) of the Data Package [see here][dp-profiles]
+* `profiles`: an hash of [Data Package profile][dp-profiles]-version pairs which the data package conforms to.
 * `resources`: an array of [Data Resources][dp-resources]
 * `mapping`: a hash that provides information to build out the logical model of the package
 
@@ -481,7 +481,7 @@ There is no material for the appendix at present.
 [tdp]: http://dataprotocols.org/tabular-data-package/
 [bdp]: https://github.com/openspending/budget-data-package
 [bdp-resources]: https://github.com/openspending/budget-data-package/blob/master/specification.md#budget-specific-metadata
-[dp-profiles]: https://github.com/dataprotocols/dataprotocols/issues/183
+[dp-profiles]: https://github.com/dataprotocols/dataprotocols/issues/87
 [dp-resources]: http://dataprotocols.org/data-packages/#resource-information
 [fd]: http://data.okfn.org
 [mapping]: http://docs.openspending.org/en/latest/model/design.html#views-and-pre-defined-visualizations
