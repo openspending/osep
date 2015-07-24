@@ -120,7 +120,6 @@ The following properties `MUST` be on the top-level descriptor:
 * `profiles`: an array which declares the profile type(s) of the Data Package [see here][dp-profiles]
 * `resources`: an array of [Data Resources][dp-resources]
 * `mapping`: a hash that provides information to build out the logical model of the package
-* `owner`: The username of the account on OpenSpending that owns this package
 
 The following properties `SHOULD` be on the top-level descriptor:
 
@@ -218,8 +217,8 @@ The following properties `MUST` be on `mapping`:
 
 Additional properties:
 
-* `currency`: Any valid ISO 4217 currency code. Defaults to `USD`.
-* `factor`: A factor by which to multiple the raw monetary values to get the real monetary amount. Defaults to `1`.
+* `currency`: (`MUST`) Any valid ISO 4217 currency code.
+* `factor`: (`MAY`) A factor by which to multiple the raw monetary values to get the real monetary amount, eg `1000`. Defaults to `1`.
 
 ```
 # mapping to a single file
@@ -229,11 +228,19 @@ Additional properties:
   "factor": 1
 }
 
-# mapping to a single file, default to USD with a factor of 1
-"amount": "budget/budget_spend"
+# mapping to a single file in USD with a default factor of 1
+"amount": { 
+  "source": "budget/budget_spend",
+  "currency": "USD"
+}
 
 # mapping to multiple files
-"amount": ["budget1/budget_spend", "budget2/budget_spend"]
+"amount": [
+  { "source": "budget1/budget_spend"
+    "currency": "GBP" },
+  { "source": "budget2/budget_spend",
+    "currency": "GBP" }
+]
 ```
 
 #### `date`

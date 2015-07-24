@@ -5,7 +5,6 @@
     "openspending": "*",
     "tabular": "*"
   },
-  "owner": "my-username",
   "mapping": {
     "id": "budget/pk",
     "amount": {
