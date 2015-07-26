@@ -57,17 +57,25 @@ Our goal is that OpenSpending Data Package and Budget Data Package will eventual
 
 ## Proposal
 
-An OpenSpending Data Package is a Tabular Data Package Profile.
+An OpenSpending Data Package is a profile of Tabular Data Package, which is a profile of Data Package.
+
+A valid OpenSpending Data Package package MUST be a valid [Data Package](http://dataprotocols.org/data-packages/) as defined in that specification. This means that it MUST:
+
+* Contain a package descriptor (`datapackage.json`)
+* Provide at least the minimum required package metadata as described in the Data Package specification
+* Include a description of each data file in the package in the `resources`array of the package
+
+It MUST also be a valid [Tabular Data Package](http://dataprotocols.org/tabular-data-package/):
+
+* It MUST contain at least one data file
+* All data files MUST be in CSV format.
+* Every resource MUST have a `schema` following the [JSON Table Schema specification](http://dataprotocols.org/json-table-schema/)
 
 ### What an OpenSpending Data Package looks like
 
-An OpenSpending Data Package is:
+Usually, the datapackage.json and data files are bundled together, and collectively referred to as "the data package".
 
-* A descriptor file, named `datapackage.json`, which provides metadata
-* Data stored in one or many well-structured CSV files, referred to from the Data Package descriptor in the `resources` property, where each resource represents a file and its specific metadata
-* Usually, the descriptor and the resources will be co-located in a directory, and this directory represents the "Data Package"
-
-A simple example of an OpenSpending Data Package on disk, or in the DataStore, will look like this:
+A simple example of an OpenSpending Data Package on disk, or in the DataStore:
 
 ```
 datapackage.json
@@ -75,7 +83,7 @@ datapackage.json
 data/my-financial-data.csv
 ```
 
-A more complex example may have additional files:
+A more complex example, with additional files:
 
 ```
 datapackage.json
@@ -105,20 +113,18 @@ data/my-list-of-entities-receiving-money.csv # data that augmented the spend dat
 data/my-list-of-projects-the-money-is-associated-with.csv # additional augmenting data
 ```
 
-### OpenSpending Data Package specification
-
-As stated, this specification builds on the [Data Package][dp] and [Tabular Data Package][tdp] specifications, so please reference these for further information.
-
 ### Top-level descriptor
 
 `datapackage.json` is the central file in a OpenSpending Data Package.
 
+*Attributes defined in Data Package are marked (DP), and those that come from Tabular Data Package are marked (TDP).*
+
 The following properties `MUST` be on the top-level descriptor:
 
-* `name`: a url-compatible short name ("slug") for the package
-* `title`: a human readable title for the package
+* `name` (DP): a url-compatible short name ("slug") for the package
+* `title` (DP): a human readable title for the package
 * `profiles`: an hash of [Data Package profile][dp-profiles]-version pairs which the data package conforms to.
-* `resources`: an array of [Data Resources][dp-resources]
+* `resources` (DP): an array of [Data Resources][dp-resources]
 * `mapping`: a hash that provides information to build out the logical model of the package
 
 The following properties `SHOULD` be on the top-level descriptor:
@@ -143,19 +149,19 @@ In addition to the properties described above, the descriptor `MAY` contain any 
 
 The following properties `MUST` be on each resource in `resources`:
 
-* `url`, `path` or `data`: which provides the actual data
-* `name`: a url-compatible short name ("slug")
-* `schema`: a [JSON Table Schema][jts] that describes the types of, and relations within, the data
+* `url`, `path` or `data` (DP): which provides the actual data
+* `name` (DP): a url-compatible short name ("slug")
+* `schema` (DP): a [JSON Table Schema][jts] that describes the types of, and relations within, the data
 
 The following properties `SHOULD` be on each resource in `resources`:
 
-* `title`: a human readable title
-* `description`: a human readable description of the resource contents
+* `title` (DP): a human readable title
+* `description` (DP): a human readable description of the resource contents
 
 
 ### Mapping
 
-The mapping hash provides a way to derive our logical model from the physical model represented by the package's resources via **mapping attributes** and **attribute groups**.
+The `mapping` hash provides a way to derive our logical model from the physical model represented by the package's resources via **mapping attributes** and **attribute groups**.
 
 
 #### Attributes
