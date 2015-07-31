@@ -71,6 +71,11 @@ It MUST also be a valid [Tabular Data Package](http://dataprotocols.org/tabular-
 * All data files MUST be in CSV format.
 * Every resource MUST have a `schema` following the [JSON Table Schema specification](http://dataprotocols.org/json-table-schema/)
 
+![Basic diagram of OpenSpending Data Package](Open Spending Data Package.svg){: .center-block}
+
+Basic overview of the OpenSpending Data Package
+{: style="text-align: center"}
+
 ### What an OpenSpending Data Package looks like
 
 Usually, the datapackage.json and data files are bundled together, and collectively referred to as "the data package".
