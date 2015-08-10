@@ -6,7 +6,8 @@ title: New DataStore in Detail
 created: 26 April 2015
 updated: 10 August 2015
 authors: [Rufus Pollock, Paul Walsh]
-accepted: redirect_from: "/06-datastore.html"
+accepted:
+redirect_from: "/06-datastore.html"
 ---
 
 At the heart of [OSEP 1][osep1] architecture is the DataStore which is the
