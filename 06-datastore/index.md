@@ -7,7 +7,9 @@ created: 26 April 2015
 updated: 10 August 2015
 authors: [Rufus Pollock, Paul Walsh]
 accepted:
-redirect_from: "/06-datastore.html"
+redirect_from:
+  - "/06-datastore.html"
+  - "/osep-06.md"
 ---
 
 At the heart of [OSEP 1][osep1] architecture is the DataStore which is the

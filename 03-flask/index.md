@@ -7,7 +7,9 @@ created: 30 September 2013
 updated: 30 September 2013
 accepted: 10 June 2015
 authors: [Tryggvi Björgvinsson, Friedrich Lindenberg]
-redirect_from: "/03-flask-web-framework.html"
+redirect_from:
+  - "/03-flask-web-framework.html"
+  - "/osep-03.html"
 ---
 
 This document proposes a replacement for the Pylons web framework currently being used for OpenSpending. Pylons is a deprecated (in favour of Pyramid). This document proposes Flask as a new web framework for OpenSpending.

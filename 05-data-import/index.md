@@ -2,12 +2,14 @@
 layout: default
 osep: 5
 discussion: https://github.com/openspending/osep/issues/7
-title: OpenSpending ETL Workflow and Modules
+title: Importing Data into OpenSpending
 created: 18 January 2015
 updated: 23 February 2015
 authors: [Rufus Pollock, Tryggvi Björgvinsson, Paul Walsh]
 accepted:
-redirect_from: "/05-etl-workflow.html"
+redirect_from:
+  - "/05-etl-workflow.html"
+  - "/osep-05.html"
 ---
 
 This document extends OSEP 1 fleshing out detail around the ETL section of OpenSpending.

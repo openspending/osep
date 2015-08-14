@@ -7,7 +7,9 @@ created: 10 April 2013
 updated: 22 December 2014
 accepted: 21 February 2015
 authors: [Rufus Pollock, Tryggvi Björgvinsson]
-redirect from: "/01-approach-and-architecture-of-openspending.html"
+redirect_from:
+  - "/01-approach-and-architecture-of-openspending.html"
+  - "/osep-01.html"
 ---
 
 ## Overview

@@ -7,7 +7,9 @@ created: 26 April 2015
 updated: 26 April 2015
 authors: [Rufus Pollock, Paul Walsh]
 accepted:
-redirect_from: "/07-aggregation.html"
+redirect_from:
+  - "/07-aggregation.html"
+  - "/osep-07.html"
 ---
 
 To produce visualizations or other forms of analytics one must aggregate low-level transactions summing over particular dimensions.

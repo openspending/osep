@@ -7,7 +7,9 @@ created: 8 December 2013
 updated: 13 August 2015
 authors: Rufus Pollock, Paul Walsh
 accepted:
-# redirect_from: "/04-openspending-data-package.html"
+redirect_from:
+  - "/04-openspending-data-package.html"
+  - "/osep-04.html"
 ---
 
 ## Overview

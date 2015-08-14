@@ -7,7 +7,9 @@ created: 19 April 2013
 updated: 8 June 2013
 authors: Rufus Pollock
 accepted: 1 August 2013
-redirect_from: "/02-data-storage-and-data-pipeline.html"
+redirect_from:
+  - "/02-data-storage-and-data-pipeline.html"
+  - "/osep-02.html"
 ---
 
 
