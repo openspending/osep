@@ -4,83 +4,45 @@ title: OpenSpending Data Package
 osep: 4
 discussion: https://github.com/openspending/osep/issues/6
 created: 8 December 2013
-updated: 23 July 2015
+updated: 13 August 2015
 authors: Rufus Pollock, Paul Walsh
 accepted:
-redirect_from: "/04-openspending-data-package.html"
+# redirect_from: "/04-openspending-data-package.html"
 ---
 
 ## Overview
 
-The specification of an OpenSpending Data Package is an essential part of the move to a flat-file based DataStore (see [OSEP-02][osep-02] and [OSEP-6][osep-06]) and [Github Issue 669][issue-669].
+The fiscal data that OpenSpending imports and manages comes in all shapes and sizes. To be able to efficiently import and manage that data we need some way to describe and structure the data.
 
-OpenSpending Data Packages are a *[Profile][dp-profiles]* of the [Tabular Data Package][tdp] format, and also implement significant portions of the [Budget Data Package][bdp] specification, albeit in a different manner. We do plan to syncronize OpenSpending Data Package and Budget Data Package in the near future.
+We want to do this in a way that is easy for publishers to use but, at the same time, requires enough structure so that consumers of that data - most importantly tools and services within the OpenSpending - can use the published data easily too.
 
-The OpenSpending Data Package specification aims to provide support for:
-
-* Mapping the physical model, as represented by Resources and their data files, to a logical model that can be used by various OpenSpending services.
-* Packaging both normalized and denormalized data sources for use in OpenSpending, in order to support a wider range of data sources.
-* Packaging resources that are *referenced* by the spend data proper, but that do not actually contain spend data. This could mean, for example, rich data on the recipients of funds, or projects associated with a particular set of data.
-* Progressive enhancement of data via a range of *recommended*, but not *required* metadata, in order to establish clear path for data providers to enhance data quality, and to address new use cases for the OpenSpending platform going forward.
-
-Leveraging [Data Package][dp] also opens up new opportunities to reuse/remix data from Open Spending with other tools and platforms in the [Frictionless Data][fd] ecosystem.
+OpenSpending Data Package is our proposed solution. It is a simple set of requirements on the structure of the data itself - the CSV, Excel or other files - plus a metadata specification to describe those files in a way that makes them easily usuable in the platform.
 
 ## Background
 
-### What is a Data Package?
+This proposal assumes some familiarity with fiscal, i.e. budgetary etc, data. This is the data we are concerned about structuring and describing. Often, this data takes the form of rows in a spreadsheet or database with each row describing some kind of expenditure or receipt of money. The data can get considerably more complex but keep this simple model in mind for what follows.
 
-The [Data Package][dp] specifications are a family of formats for standardised publishing of data.
-
-Data Packages can have *[Profiles][dp-profiles]*, which extend base specifications towards more specific application.
-
-[Tabular Data Package][tdp] describes a publishing standard specifically for tabular data (e.g.: CSV). [Budget Data Package][bdp] is a profile that extends Tabular Data Package to describe a publishing standard for both transactional and aggregate fiscal data.
-
-### What is an OpenSpending Data Package?
-
-An **OpenSpending Data Package** is a Data Package Profile that extends Tabular Data Package, with *spend data* resources that have a similar schema and required field set to resources in Budget Data Package.
-
-The OpenSpending platform stores spend data of both agreggate and transactional form. Currently, data is managed in a relational database. In moving to a flat file DataStore for all "raw" data in OpenSpending, we require a way to provide metadata for the data in a structured form, as well as a canonical way to access the spend data from the sources provided by the data packager.
-
-Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-01][osep-01]) can rely on to access it.
-
-Finally, we want to widen the use cases that OpenSpending can support. Part of the solution for this is to provide a way to store and reference additional data that supports the core spend data. OpenSpending Data Package provides structure for this.
-
-### Relationship to Budget Data Package
-
-[Budget Data Package][bdp] is another specification that Open Knowledge contributes to. Budget Data Package is already in use, and has a number of partners contributing to the specification. So, why aren't we using it?
-
-1. Budget Data Package makes no distinction between the physical model and the logical model of data. This puts more responsibility on data producers to create resource files that strictly conform with the specification, right down to the naming of columns. OpenSpending Data Package provides a way to map the ideal logical model to the actual physical model.
-2. Budget Data Package *requires* some metadata, like COFOG codes, that we would rather have as *recommendations* for OpenSpending.
-3. Budget Data Package places most metadata on Resource objects, and by extension, expects that each Resource in the package is a spend data resource. OpenSpending Data Package places most metadata on the top-level descriptor, and provides support for Resources of spend data mixed with other data that supports the spend data.
-
-Our goal is that OpenSpending Data Package and Budget Data Package will eventually merge into a single specification.
+This proposal also builds one and reuses the [Data Package][dp] specifications. These are a family of simple, lightweight formats for publishing data. If you are unfamiliar with these more information can be found in the Appendix.
 
 ## Proposal
 
-An OpenSpending Data Package is a profile of Tabular Data Package, which is a profile of Data Package.
+An OpenSpending Data Package has a simple structure:
 
-A valid OpenSpending Data Package package MUST be a valid [Data Package](http://dataprotocols.org/data-packages/) as defined in that specification. This means that it MUST:
+* Data: the data MUST be stored in CSV files.
+* Descriptor: there must a descriptor for the data and the "package" as a whole (e.g. who created it, high-level description etc). This comes in the form of a single `datapackage.json` file.
 
-* Contain a package descriptor (`datapackage.json`)
-* Provide at least the minimum required package metadata as described in the Data Package specification
-* Include a description of each data file in the package in the `resources`array of the package
-
-It MUST also be a valid [Tabular Data Package](http://dataprotocols.org/tabular-data-package/):
-
-* It MUST contain at least one data file
-* All data files MUST be in CSV format.
-* Every resource MUST have a `schema` following the [JSON Table Schema specification](http://dataprotocols.org/json-table-schema/)
+Here's an overview diagram that not only illustrates the basic setup but also the relation with the Data Package specifications:
 
 ![Basic diagram of OpenSpending Data Package](Open Spending Data Package.svg){: .center-block}
 
 Basic overview of the OpenSpending Data Package
 {: style="text-align: center"}
 
-### What an OpenSpending Data Package looks like
+**Some Introductory Examples**
 
-Usually, the datapackage.json and data files are bundled together, and collectively referred to as "the data package".
+To make this concrete, we set out some examples of what an OpenSpending Data Package looks like on disk. Usually, the datapackage.json and data files are bundled together, and collectively referred to as "the data package".
 
-A simple example of an OpenSpending Data Package on disk, or in the DataStore:
+A simple example of an OpenSpending Data Package:
 
 ```
 datapackage.json
@@ -117,6 +79,23 @@ data/my-financial-data.csv # actually contains spend data
 data/my-list-of-entities-receiving-money.csv # data that augmented the spend data
 data/my-list-of-projects-the-money-is-associated-with.csv # additional augmenting data
 ```
+
+### Details
+
+As mentioned, OpenSpending Data Package builds on the existing [Data Package][dp] specifications. In particular, the base Data Package specification already gives a lot of detail about the `datapackage.json` descriptor and the Tabular Data Package is a profile of Tabular Data Package, which is a profile of Data Package.
+
+
+A valid OpenSpending Data Package package MUST be a valid [Data Package](http://dataprotocols.org/data-packages/) as defined in that specification. This means that it MUST:
+
+* Contain a package descriptor (`datapackage.json`)
+* Provide at least the minimum required package metadata as described in the Data Package specification
+* Include a description of each data file in the package in the `resources`array of the package
+
+It MUST also be a valid [Tabular Data Package](http://dataprotocols.org/tabular-data-package/):
+
+* It MUST contain at least one data file
+* All data files MUST be in CSV format.
+* Every resource MUST have a `schema` following the [JSON Table Schema specification](http://dataprotocols.org/json-table-schema/)
 
 ### Top-level descriptor
 
@@ -481,8 +460,51 @@ Migration of metadata is relatively simple:
 
 ## Appendix
 
-There is no material for the appendix at present.
+### Related OSEPs
 
+* OpenSpending Next Platform Architecture
+* Move to a flat-file based DataStore (see [OSEP-02][osep-02] and [OSEP-6][osep-06]) and [Github Issue 669][issue-669]
+
+The OpenSpending Data Package specification aims to provide support for:
+
+* Mapping the physical model, as represented by Resources and their data files, to a logical model that can be used by various OpenSpending services.
+* Packaging both normalized and denormalized data sources for use in OpenSpending, in order to support a wider range of data sources.
+* Packaging resources that are *referenced* by the spend data proper, but that do not actually contain spend data. This could mean, for example, rich data on the recipients of funds, or projects associated with a particular set of data.
+* Progressive enhancement of data via a range of *recommended*, but not *required* metadata, in order to establish clear path for data providers to enhance data quality, and to address new use cases for the OpenSpending platform going forward.
+
+### Relationship to Data Packages
+
+OpenSpending Data Packages are a *[Profile][dp-profiles]* of the [Tabular Data Package][tdp] format, and also implement significant portions of the [Budget Data Package][bdp] specification, albeit in a different manner. We do plan to syncronize OpenSpending Data Package and Budget Data Package in the near future.
+
+Leveraging [Data Package][dp] also opens up new opportunities to reuse/remix data from Open Spending with other tools and platforms in the [Frictionless Data][fd] ecosystem.
+
+### What is a Data Package?
+
+The [Data Package][dp] specifications are a family of formats for standardised publishing of data.
+
+Data Packages can have *[Profiles][dp-profiles]*, which extend base specifications towards more specific application.
+
+[Tabular Data Package][tdp] describes a publishing standard specifically for tabular data (e.g.: CSV). [Budget Data Package][bdp] is a profile that extends Tabular Data Package to describe a publishing standard for both transactional and aggregate fiscal data.
+
+### Relationship to Budget Data Package
+
+[Budget Data Package][bdp] is another specification that Open Knowledge contributes to. Budget Data Package is already in use, and has a number of partners contributing to the specification. So, why aren't we using it?
+
+1. Budget Data Package makes no distinction between the physical model and the logical model of data. This puts more responsibility on data producers to create resource files that strictly conform with the specification, right down to the naming of columns. OpenSpending Data Package provides a way to map the ideal logical model to the actual physical model.
+2. Budget Data Package *requires* some metadata, like COFOG codes, that we would rather have as *recommendations* for OpenSpending.
+3. Budget Data Package places most metadata on Resource objects, and by extension, expects that each Resource in the package is a spend data resource. OpenSpending Data Package places most metadata on the top-level descriptor, and provides support for Resources of spend data mixed with other data that supports the spend data.
+
+Our goal is that OpenSpending Data Package and Budget Data Package will eventually merge into a single specification.
+
+### What is an OpenSpending Data Package?
+
+An **OpenSpending Data Package** is a Data Package Profile that extends Tabular Data Package, with *spend data* resources that have a similar schema and required field set to resources in Budget Data Package.
+
+The OpenSpending platform stores spend data of both agreggate and transactional form. Currently, data is managed in a relational database. In moving to a flat file DataStore for all "raw" data in OpenSpending, we require a way to provide metadata for the data in a structured form, as well as a canonical way to access the spend data from the sources provided by the data packager.
+
+Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-01][osep-01]) can rely on to access it.
+
+Finally, we want to widen the use cases that OpenSpending can support. Part of the solution for this is to provide a way to store and reference additional data that supports the core spend data. OpenSpending Data Package provides structure for this.
 
 [issue-669]: https://github.com/openspending/openspending/issues/669
 [osep-01]: http://labs.openspending.org/osep/osep-01.html
@@ -501,3 +523,4 @@ There is no material for the appendix at present.
 [current-model]: http://docs.openspending.org/en/latest/model/design.html
 [cofog]: http://unstats.un.org/unsd/cr/registry/regcst.asp?Cl=4
 [imf-budget]: http://www.imf.org/external/pubs/ft/tnm/2009/tnm0906.pdf
+
