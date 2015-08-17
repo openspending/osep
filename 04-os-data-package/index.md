@@ -48,7 +48,7 @@ OpenSpending Data Package builds on the existing [Data Package][dp] specificatio
 
 Here's an overview diagram that not only illustrates the basic setup but also the relation with the Data Package specifications:
 
-![Basic diagram of OpenSpending Data Package](Open Spending Data Package.svg){: .center-block}
+![Basic diagram of OpenSpending Data Package](img/open-spending-data-package.svg){: .center-block}
 
 Basic overview of the OpenSpending Data Package
 {: style="text-align: center"}
