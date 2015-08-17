@@ -1,20 +1,6 @@
 {
   "name": "my-openspending-datapackage",
   "title": "My OpenSpending Data Package",
-  "profiles": {
-    "openspending": "*",
-    "tabular": "*"
-  },
-  "owner": "my-username",
-  "mapping": {
-    "id": "budget/pk",
-    "amount": {
-      "source": "budget/budget",
-      "currency": "USD",
-      "factor": 1
-    },
-    "date": "budget/budget_date"
-  },
   "resources": [
     {
       "name": "budget",
@@ -23,21 +9,33 @@
       "schema": {
         "fields": [
           {
-            "name": "id",
-            "type": "string"
-          },
-          {
-            "name": "amount",
+            "name": "expenditure",
             "type": "number",
             "format": "currency"
           },
           {
-            "name": "date",
+            "name": "year",
             "type": "date"
           }
-      ],
-      "primaryKey": "id"
+        ]
       }
     }
-  ]
+  ],
+  "mapping": {
+    "measures": {
+      "amount": {
+        "source": "expenditure",
+        "currency": "USD",
+        "factor": 1
+      }
+    },
+    "date": {
+      "properties": {
+        "year": {
+          "source": "year"
+        }
+      }
+    }
+  }
 }
+

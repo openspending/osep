@@ -4,7 +4,7 @@ title: OpenSpending Data Package
 osep: 4
 discussion: https://github.com/openspending/osep/issues/6
 created: 8 December 2013
-updated: 13 August 2015
+updated: 17 August 2015
 authors: Rufus Pollock, Paul Walsh
 accepted:
 redirect_from:
@@ -12,26 +12,39 @@ redirect_from:
   - "/osep-04.html"
 ---
 
-## Overview
+# Overview
 
 The fiscal data that OpenSpending imports and manages comes in all shapes and sizes. To be able to efficiently import and manage that data we need some way to describe and structure the data.
 
-We want to do this in a way that is easy for publishers to use but, at the same time, requires enough structure so that consumers of that data - most importantly tools and services within the OpenSpending - can use the published data easily too.
+We want to do this in a way that is easy for publishers to use but, at the same time, provides enough information that consumers - most importantly tools and services within the OpenSpending - can also use the data easily.
 
 OpenSpending Data Package is our proposed solution. It is a simple set of requirements on the structure of the data itself - the CSV, Excel or other files - plus a metadata specification to describe those files in a way that makes them easily usuable in the platform.
 
-## Background
+## Table of Contents
+{:.no_toc}
 
-This proposal assumes some familiarity with fiscal, i.e. budgetary etc, data. This is the data we are concerned about structuring and describing. Often, this data takes the form of rows in a spreadsheet or database with each row describing some kind of expenditure or receipt of money. The data can get considerably more complex but keep this simple model in mind for what follows.
+* Will be replaced with the ToC, excluding the "Contents" header
+{:toc}
+
+
+# Background
+
+This proposal assumes some familiarity with fiscal data - e.g. budgets, spending etc - as this is the data we are structuring and describing.
+
+Often, this data takes the form of rows in a spreadsheet or database with each row describing some kind of expenditure or receipt of money. The data can get considerably more complex but keep this simple model in mind for what follows.
+
+TODO: simple ascii diagram of a classic spreadsheet
 
 This proposal also builds one and reuses the [Data Package][dp] specifications. These are a family of simple, lightweight formats for publishing data. If you are unfamiliar with these more information can be found in the Appendix.
 
-## Proposal
+# Proposal
 
 An OpenSpending Data Package has a simple structure:
 
 * Data: the data MUST be stored in CSV files.
 * Descriptor: there must a descriptor for the data and the "package" as a whole (e.g. who created it, high-level description etc). This comes in the form of a single `datapackage.json` file.
+
+OpenSpending Data Package builds on the existing [Data Package][dp] specifications. In particular, OpenSpending is a Tabular Data Package which is, in turn, a Data Package. Specifically, an OpenSpending Data Package package MUST be a valid [Data Package][dp] and MUST be a valid [Tabular Data Package][tdp]. We will spell out key implications of this as we proceed.
 
 Here's an overview diagram that not only illustrates the basic setup but also the relation with the Data Package specifications:
 
@@ -40,9 +53,9 @@ Here's an overview diagram that not only illustrates the basic setup but also th
 Basic overview of the OpenSpending Data Package
 {: style="text-align: center"}
 
-**Some Introductory Examples**
+## Data Packages on Disk
 
-To make this concrete, we set out some examples of what an OpenSpending Data Package looks like on disk. Usually, the datapackage.json and data files are bundled together, and collectively referred to as "the data package".
+Here are some examples of what an OpenSpending Data Package looks like on disk. Usually, the datapackage.json and data files are bundled together, and collectively referred to as "the data package".
 
 A simple example of an OpenSpending Data Package:
 
@@ -82,36 +95,33 @@ data/my-list-of-entities-receiving-money.csv # data that augmented the spend dat
 data/my-list-of-projects-the-money-is-associated-with.csv # additional augmenting data
 ```
 
-### Details
+## The Data
 
-As mentioned, OpenSpending Data Package builds on the existing [Data Package][dp] specifications. In particular, the base Data Package specification already gives a lot of detail about the `datapackage.json` descriptor and the Tabular Data Package is a profile of Tabular Data Package, which is a profile of Data Package.
+The data in your Data Package intended for use by OpenSpending MUST:
 
+* Be in CSV format.
+* Have well-structured CSVs- no blank rows, columns etc. [Tabular Data Package][tdp] speels this out in detail.
 
-A valid OpenSpending Data Package package MUST be a valid [Data Package](http://dataprotocols.org/data-packages/) as defined in that specification. This means that it MUST:
+*Note: you can store other data files in your data package - for example, you may want to archive the original xls or data files you used. However, we do not consider these the "OpenSpending" data.*
 
-* Contain a package descriptor (`datapackage.json`)
-* Provide at least the minimum required package metadata as described in the Data Package specification
-* Include a description of each data file in the package in the `resources`array of the package
+## The Descriptor - `datapackage.json`
 
-It MUST also be a valid [Tabular Data Package](http://dataprotocols.org/tabular-data-package/):
+An OpenSpending data package MUST contain a `datapackage.json` - it is the central file in an OpenSpending Data Package.
 
-* It MUST contain at least one data file
-* All data files MUST be in CSV format.
-* Every resource MUST have a `schema` following the [JSON Table Schema specification](http://dataprotocols.org/json-table-schema/)
+The `datapackage.json` contains information in three key areas:
 
-### Top-level descriptor
+* Package Metadata - title, author etc
+* Resources - describing data files
+* Mapping - mapping the source data to a "Logical" model
 
-`datapackage.json` is the central file in a OpenSpending Data Package.
+We will detail each in turn.
 
-*Attributes defined in Data Package are marked (DP), and those that come from Tabular Data Package are marked (TDP).*
+## General Package Metadata
 
 The following properties `MUST` be on the top-level descriptor:
 
 * `name` (DP): a url-compatible short name ("slug") for the package
 * `title` (DP): a human readable title for the package
-* `profiles`: an hash of [Data Package profile][dp-profiles]-version pairs which the data package conforms to.
-* `resources` (DP): an array of [Data Resources][dp-resources]
-* `mapping`: a hash that provides information to build out the logical model of the package
 
 The following properties `SHOULD` be on the top-level descriptor:
 
@@ -127,208 +137,127 @@ The following properties `MAY` be on the top-level descriptor:
 * `direction`: A keyword that represents the *direction* of the spend, being one of "expenditure" or "revenue". Defaults to "expenditure" (See [Budget Data Package][bdp-resources]).
 * `status`: A keyword that represents the status of the data, being one of "proposed", "approved", "adjusted", or "executed". Defaults to "approved" (See [Budget Data Package][bdp-resources]).
 
-
 In addition to the properties described above, the descriptor `MAY` contain any number of additional properties that are not declared in the specification.
 
 
-### Resources
+## Resources
 
-The following properties `MUST` be on each resource in `resources`:
+The Data Package MUST have a `resources` property. 
 
-* `url`, `path` or `data` (DP): which provides the actual data
-* `name` (DP): a url-compatible short name ("slug")
-* `schema` (DP): a [JSON Table Schema][jts] that describes the types of, and relations within, the data
+The definition and behaviour of the `resources` property is described in detail in the [Data Package][dp-resources] and [Tabular Data Package][tdp] specifications.
 
-The following properties `SHOULD` be on each resource in `resources`:
-
-* `title` (DP): a human readable title
-* `description` (DP): a human readable description of the resource contents
+The only point we emphasize here is that each data file MUST have an entry in the `resources` array.
 
 
-### Mapping
+## Mapping
 
-The `mapping` hash provides a way to derive our logical model from the physical model represented by the package's resources via **mapping attributes** and **attribute groups**.
+The OpenSpending Data Package MUST provide a `mapping` property.  `mapping` MUST be a hash.
 
+The `mapping` hash provides a way to derive our logical model from the physical model represented by the package's resources.
 
-#### Attributes
+<img src="https://docs.google.com/drawings/d/1krRsqOdV_r9VEjzDSliLgmTGcbLhnvd6IH-YDE8BEAY/pub?w=710&h=357" alt="" />
 
-Attributes must be declared as follows:
+*Diagram illustrating how the mapping connects the "physical" model (raw CSV files) to the "logical", conceptual, model. The conceptual model is heavily oriented around OLAP.  ([Source on Gdocs](https://docs.google.com/drawings/d/1krRsqOdV_r9VEjzDSliLgmTGcbLhnvd6IH-YDE8BEAY/edit))*
 
-* IF the attribute value is a `HASH`, the hash `MUST` contain a `source` property that provides the mapping for this attribute
-* IF the attrubute value is a `HASH`, any other properties `MAY` be present. Specific attributes of the OpenSpending data model may enforce particular requirements on additional properties
-* The value of `attribute.source` `MUST` be either a `STRING` or an `ARRAY`.
-  * IF the value is a `STRING`, it is of the format "{RESOURCE_NAME}/{FIELD_NAME}". Glob patterns `MAY` be used for the {RESOURCE_NAME} portion in order to match multiple resources.
-  * IF the value is an `ARRAY`, then it is an array of complying source strings.
+*Note: a strong focus of this spec is simplicity, especially for publishers. Hence, in regard of the mapping we tend to follow a parsimonious approach and only require features that directly relate to key data consumption use cases, most specifically easy aggregation. As such, we do not seek to provide a complete description of the data.*
 
-A mapping attribute looks like this:
+### Logical Model
+
+The logical model is heavily based on [OLAP][olap]. Key aspects for our purpose are:
+
+* Numerical *measures*: these will usually be the monetary amounts in the spending data
+* Dimensions including common ones like:
+  * Dates / times: almost all spending data has a temporal aspect.
+  * Payor and Payee: entities spending or receiving money
+  * Project / Programs: expenditure is often linked to a specific project or program
+  * Taxonomies or classifications: expenditure is often classified in standard ways
+
+From an OLAP perspective many of these dimensions may not split out in actual separate tables but map to attributes on the fact table if they are very simple (e.g. a given classification may just be a single field).
+
+### Details
+
+The `mapping` has the following structure:
+
+```
+  "measures": {
+    "measure-name": {
+      measure-descriptor
+    }
+  }
+  "dimension-1": ...
+  "dimension-2": ...
+```
+
+**Describing sources**: one common feature that we will need repeatedly is to indicate that the data for a given part of the logical model comes from a given field/column in a CSV file. Our common pattern for this is:
 
 ```
 # full representation, using an object and the source property
-"attribute_name": {
-  "source": "",
-  ... other properties of the attribute
-}
+"property-on-logical-model": {
+  "source": "name-of-field-on-the-resource",
+  # Optional - if not present it implicitly defaults to first resource in resources list
+  "resource": "name-of-resource"
 
-# shorthand, directly declaring the source of the attribute
-"attribute_name": ""
-
-# a set of attributes, grouped
-"group_name": {
-  "attribute_name1": "",
-  "attribute_name2": {
-    "source": "",
-    ... other properties
-  }
+  ...
 }
 ```
 
+### Measures
 
-#### Data model
-
-<div class="alert alert-warning">
-<strong>Note:</strong> The `mapping` object aims to provide the neccesary structure in which to fully support **any** mapping of the logical model to the physical model. However, OSEP-04 **does not** attempt to cover any and all possible use cases. Why? We want to be flexible to iterate on this as we work with real data and real needs.
-</div>
-
-The following properties `MUST` be on `mapping`:
-
-#### `id`
-
-* An **attribute** that uniquely identifies a transaction
+Measures are numerical and usually correspond to finanical amounts in the source data. Structure is like the following:
 
 ```
-# mapping to a single file
-"id": "budget/pk"
-
-# mapping to multiple files
-"id": ["budget1/pk", "budget2/pk"]
+{
+  "source": "amount"
+  "currency": "USD"
+  "factor": 1
+}
 ```
 
-#### `amount`
-
-* An **attribute** that declares the monetary amount of this transaction
-
-Additional properties:
+Properties:
 
 * `currency`: (`MUST`) Any valid ISO 4217 currency code.
 * `factor`: (`MAY`) A factor by which to multiple the raw monetary values to get the real monetary amount, eg `1000`. Defaults to `1`.
 
-```
-# mapping to a single file
-"amount": {
-  "source": "budget/budget_spend",
-  "currency": "GBP",
-  "factor": 1
-}
+### Dimensions
 
-# mapping to a single file in USD with a default factor of 1
-"amount": { 
-  "source": "budget/budget_spend",
-  "currency": "USD"
-}
-
-# mapping to multiple files
-"amount": [
-  { "source": "budget1/budget_spend"
-    "currency": "GBP" },
-  { "source": "budget2/budget_spend",
-    "currency": "GBP" }
-]
-```
-
-#### `date`
-
-* An **attribute** that declares the date of this transaction
+A dimension has the structure:
 
 ```
-# mapping to a single file
-"date": "budget/year"
-
-# mapping to multiple files
-"date": ["budget1/year", "budget2/year"]
-```
-
-
-The following properties `SHOULD` be on `mapping`:
-
-#### `title`
-
-* An **attribute** that declares the title of this transaction
-
-```
-# mapping to a single file
-"title": "budget/name"
-
-# mapping to multiple files
-"title": ["budget1/name", "budget2/name"]
-```
-
-#### `payer`
-
-* An **attribute group** that declares the payer of this transaction
-  * Has the following attributes:
-    * `id`: (`MUST`) a unique identifier for the payer
-    * `title`: (`SHOULD`) a title or name for the payer
-    * `description`: (`MAY`) a short description of the payer
-
-```
-"payer": {
-  "id": "entities/id",
-  "title": "entities/name",
-  "description": "entities/about"
+"dimension-name": {
+  "fields": {
+    "field-1": ...,
+    "field-2": ...
+  }
+  other properties ...
 }
 ```
 
-#### `payee`
-
-* An **attribute group** that declares the payee of this transaction
-  * Has the following attributes:
-    * `id`: (`MUST`) a unique identifier for the payee
-    * `title`: (`SHOULD`) a title or name for the payee
-    * `description`: (`MAY`) a short description of the payee
+Each `field` is a property on the dimension - think of it as column on that dimension in a database. At a minimum it must have "source" information - i.e. where the data comes from for that property:
 
 ```
-"payee": {
-  "id": "entities/id",
-  "title": "entities/name",
-  "description": "entities/about"
+"field-1": {
+  "source": "abc"
 }
 ```
 
-#### `function`
-
-* An **attribute group** that declares the functional classification of this transaction
-  * Has the following attributes:
-    * `id`: (`MUST`) a unique identifier for the functional classification
-    * `title`: (`SHOULD`) a title or name for the functional classification
-    * `description`: (`MAY`) a short description of the functional classification
-    * `cofog`: (`MAY`) a [COFOG][cofog] code that maps to this functional classification
+A dimension MUST have at least one field with the property `primaryKey` set on it e.g.
 
 ```
-"function": {
-  "id": "budget_tree/id",
-  "title": "budget_tree/title",
-  "description": "budget_tree/summary",
-  "cofog": "budget_tree/cofog_code"
+"field-1": {
+  "primaryKey": true # note being true is optional it can just be set to ""
+  "source": "..."
 }
 ```
 
-#### `description`
+#### Common Dimensions
 
-* An **attribute** that declares the text description of this transaction
+**`date`**
 
-```
-# mapping to a single file
-"description": "budget/notes"
+An **attribute** that declares the date of the transaction.
 
-# mapping to multiple files
-"description": ["budget1/notes", "budget2/notes"]
-```
+## Examples
 
-### Examples
-
-How does this all come together?
-
-#### Minimal example
+### Minimal example
 
 Here is the most basic example of an OpenSpending Data Package. The example describes a package that only has transactional data, with only required fields.
 
@@ -340,22 +269,7 @@ Here is the most basic example of an OpenSpending Data Package. The example desc
 {% include minimal/datapackage.json %}
 ```
 
-#### Minimal with spend over multiple files example
-
-Here is an example with spend data spread over multiple files. This demonstrates mapping of attributes over multiple physical sources.
-
-```
-# budget1.csv
-{% include multiple/budget1.csv %}
-
-# budget2.csv
-{% include multiple/budget2.csv %}
-
-# datapackage.json
-{% include multiple/datapackage.json %}
-```
-
-#### Example with entities (denormalized)
+### Example with entities (denormalized)
 
 Here is an example with information on the payor and payee, denormalized.
 
@@ -367,7 +281,7 @@ Here is an example with information on the payor and payee, denormalized.
 {% include entities-denormalized/datapackage.json %}
 ```
 
-#### Example with entities (normalized)
+### Example with entities (normalized)
 
 Here is the same example as previous, but with the entity data normalized. That means this is also an example of an OpenSpending Data Package with a resource that is not a spend resource.
 
@@ -382,7 +296,8 @@ Here is the same example as previous, but with the entity data normalized. That 
 {% include entities-normalized/datapackage.json %}
 ```
 
-#### Example with functional classification, and mapped to COFOG (normalized)
+<!--
+### Example with functional classification, and mapped to COFOG (normalized)
 
 Here we build on the previous example and add functional classification of the spend data, as well as a mapping that classification to COFOG.
 
@@ -399,8 +314,50 @@ Here we build on the previous example and add functional classification of the s
 # datapackage.json
 {% include with-classification/datapackage.json %}
 ```
+-->
 
-### Migration of Current OpenSpending Metadata
+
+----
+
+# Appendix
+
+## Related OSEPs
+
+* OpenSpending Next Platform Architecture
+* Move to a flat-file based DataStore (see [OSEP-02][osep-02] and [OSEP-6][osep-06]) and [Github Issue 669][issue-669]
+
+The OpenSpending Data Package specification aims to provide support for:
+
+* Mapping the physical model, as represented by Resources and their data files, to a logical model that can be used by various OpenSpending services.
+* Packaging both normalized and denormalized data sources for use in OpenSpending, in order to support a wider range of data sources.
+* Packaging resources that are *referenced* by the spend data proper, but that do not actually contain spend data. This could mean, for example, rich data on the recipients of funds, or projects associated with a particular set of data.
+* Progressive enhancement of data via a range of *recommended*, but not *required* metadata, in order to establish clear path for data providers to enhance data quality, and to address new use cases for the OpenSpending platform going forward.
+
+## Relationship to Data Packages
+
+OpenSpending Data Packages are a *[Profile][dp-profiles]* of the [Tabular Data Package][tdp] format, and also implement significant portions of the [Budget Data Package][bdp] specification, albeit in a different manner. We do plan to syncronize OpenSpending Data Package and Budget Data Package in the near future.
+
+Leveraging [Data Package][dp] also opens up new opportunities to reuse/remix data from Open Spending with other tools and platforms in the [Frictionless Data][fd] ecosystem.
+
+## What is a Data Package?
+
+The [Data Package][dp] specifications are a family of formats for standardised publishing of data.
+
+Data Packages can have *[Profiles][dp-profiles]*, which extend base specifications towards more specific application.
+
+[Tabular Data Package][tdp] describes a publishing standard specifically for tabular data (e.g.: CSV). [Budget Data Package][bdp] is a profile that extends Tabular Data Package to describe a publishing standard for both transactional and aggregate fiscal data.
+
+## Relationship to Budget Data Package
+
+[Budget Data Package][bdp] is another specification that Open Knowledge contributes to. Budget Data Package is already in use, and has a number of partners contributing to the specification. So, why aren't we using it?
+
+1. Budget Data Package makes no distinction between the physical model and the logical model of data. This puts more responsibility on data producers to create resource files that strictly conform with the specification, right down to the naming of columns. OpenSpending Data Package provides a way to map the ideal logical model to the actual physical model.
+2. Budget Data Package *requires* some metadata, like COFOG codes, that we would rather have as *recommendations* for OpenSpending.
+3. Budget Data Package places most metadata on Resource objects, and by extension, expects that each Resource in the package is a spend data resource. OpenSpending Data Package places most metadata on the top-level descriptor, and provides support for Resources of spend data mixed with other data that supports the spend data.
+
+Our goal is that OpenSpending Data Package and Budget Data Package will eventually merge into a single specification.
+
+## Migration of Current OpenSpending Metadata
 
 Full [documentation of the current OpenSpending JSON data model is here][current-model]. The top-level structure is as follows:
 
@@ -439,7 +396,7 @@ Migration of metadata is relatively simple:
 * `mapping` => `mapping`
 * `views` => ??
 
-### Structuring Data
+## Structuring Data
 
 * Recommendations about structuring the data
   * For datasets like to be below 10MB store into one file
@@ -452,61 +409,10 @@ Migration of metadata is relatively simple:
 * Versioning data - we recommend turning on s3 versioning so we don't need to
   worry about accidental data loss
 
-### Extras (under discussion)
+## `archive` directory
 
-* `archive` directory is for data that is not for openspending directly but is
-  useful to archive raw data files from which data was extracted
-* Note it is possible to store the data elsewhere than in data.openspending.org -
-  you can have datapackage.json point to files somewhere else on the web
-    (though we may still want to cache that at some point)
+`archive` directory is for data that is not for openspending directly but is useful to archive raw data files from which data was extracted.
 
-## Appendix
-
-### Related OSEPs
-
-* OpenSpending Next Platform Architecture
-* Move to a flat-file based DataStore (see [OSEP-02][osep-02] and [OSEP-6][osep-06]) and [Github Issue 669][issue-669]
-
-The OpenSpending Data Package specification aims to provide support for:
-
-* Mapping the physical model, as represented by Resources and their data files, to a logical model that can be used by various OpenSpending services.
-* Packaging both normalized and denormalized data sources for use in OpenSpending, in order to support a wider range of data sources.
-* Packaging resources that are *referenced* by the spend data proper, but that do not actually contain spend data. This could mean, for example, rich data on the recipients of funds, or projects associated with a particular set of data.
-* Progressive enhancement of data via a range of *recommended*, but not *required* metadata, in order to establish clear path for data providers to enhance data quality, and to address new use cases for the OpenSpending platform going forward.
-
-### Relationship to Data Packages
-
-OpenSpending Data Packages are a *[Profile][dp-profiles]* of the [Tabular Data Package][tdp] format, and also implement significant portions of the [Budget Data Package][bdp] specification, albeit in a different manner. We do plan to syncronize OpenSpending Data Package and Budget Data Package in the near future.
-
-Leveraging [Data Package][dp] also opens up new opportunities to reuse/remix data from Open Spending with other tools and platforms in the [Frictionless Data][fd] ecosystem.
-
-### What is a Data Package?
-
-The [Data Package][dp] specifications are a family of formats for standardised publishing of data.
-
-Data Packages can have *[Profiles][dp-profiles]*, which extend base specifications towards more specific application.
-
-[Tabular Data Package][tdp] describes a publishing standard specifically for tabular data (e.g.: CSV). [Budget Data Package][bdp] is a profile that extends Tabular Data Package to describe a publishing standard for both transactional and aggregate fiscal data.
-
-### Relationship to Budget Data Package
-
-[Budget Data Package][bdp] is another specification that Open Knowledge contributes to. Budget Data Package is already in use, and has a number of partners contributing to the specification. So, why aren't we using it?
-
-1. Budget Data Package makes no distinction between the physical model and the logical model of data. This puts more responsibility on data producers to create resource files that strictly conform with the specification, right down to the naming of columns. OpenSpending Data Package provides a way to map the ideal logical model to the actual physical model.
-2. Budget Data Package *requires* some metadata, like COFOG codes, that we would rather have as *recommendations* for OpenSpending.
-3. Budget Data Package places most metadata on Resource objects, and by extension, expects that each Resource in the package is a spend data resource. OpenSpending Data Package places most metadata on the top-level descriptor, and provides support for Resources of spend data mixed with other data that supports the spend data.
-
-Our goal is that OpenSpending Data Package and Budget Data Package will eventually merge into a single specification.
-
-### What is an OpenSpending Data Package?
-
-An **OpenSpending Data Package** is a Data Package Profile that extends Tabular Data Package, with *spend data* resources that have a similar schema and required field set to resources in Budget Data Package.
-
-The OpenSpending platform stores spend data of both agreggate and transactional form. Currently, data is managed in a relational database. In moving to a flat file DataStore for all "raw" data in OpenSpending, we require a way to provide metadata for the data in a structured form, as well as a canonical way to access the spend data from the sources provided by the data packager.
-
-Additionally, we want to provide flexibility in how users structure their source data, while still providing a consistent interface that OpenSpending services (see [OSEP-01][osep-01]) can rely on to access it.
-
-Finally, we want to widen the use cases that OpenSpending can support. Part of the solution for this is to provide a way to store and reference additional data that supports the core spend data. OpenSpending Data Package provides structure for this.
 
 [issue-669]: https://github.com/openspending/openspending/issues/669
 [osep-01]: http://labs.openspending.org/osep/osep-01.html
@@ -525,4 +431,6 @@ Finally, we want to widen the use cases that OpenSpending can support. Part of t
 [current-model]: http://docs.openspending.org/en/latest/model/design.html
 [cofog]: http://unstats.un.org/unsd/cr/registry/regcst.asp?Cl=4
 [imf-budget]: http://www.imf.org/external/pubs/ft/tnm/2009/tnm0906.pdf
+[olap]: https://en.wikipedia.org/wiki/Online_analytical_processing
+
 
