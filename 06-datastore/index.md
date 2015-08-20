@@ -9,7 +9,7 @@ authors: [Rufus Pollock, Paul Walsh]
 accepted:
 redirect_from:
   - "/06-datastore.html"
-  - "/osep-06.md"
+  - "/osep-06.html"
 ---
 
 At the heart of [OSEP 1][osep1] architecture is the DataStore which is the
