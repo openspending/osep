@@ -165,7 +165,7 @@ The two key points we emphasize here from the [Tabular Data Package specificatio
 
 The OpenSpending Data Package MUST provide a `mapping` property. `mapping` MUST be a hash.
 
-The `mapping` hash provides a way to derive our logical model from the physical model represented by the package's resources.
+The `mapping` hash provides a way to link the "physical" model - the data in CSV files - to a more general, conceptual, "logical" model for fiscal information.
 
 <img src="https://docs.google.com/drawings/d/1krRsqOdV_r9VEjzDSliLgmTGcbLhnvd6IH-YDE8BEAY/pub?w=710&h=357" alt="" />
 
@@ -175,14 +175,23 @@ The `mapping` hash provides a way to derive our logical model from the physical 
 
 ### Logical Model
 
-The logical model is heavily based on [OLAP][olap]. Key aspects for our purpose are:
+The logical model has some key concepts:
+
+* Amount (money): fundamentally fiscal information is usually amount amounts of money.
+  * Key subconcept are things like: currency, units of account vs nominal (i.e. deflated or purchasing power parity values vs nominal values)
+* Time: most financial transactions have a date or time associated
+* Description(s): fiscal information frequently has some kind of description or summary
+* Entities who spend or receive monies: entities, whether individuals or organizations, are the spenders or receivers of money and so often.
+  * Payor: the entity expending money
+  * Payee: the entity receiving money
+* Classifications (taxonomies): for example, that a given transaction relates to Healthcare, or is a capital vs non-capital expenditure.
+* Project / Programs: expenditure is often linked to a specific project or program
+
+The actual description implemenation utilises [OLAP][olap] terminology (and ideas). Key aspects for our purpose are:
 
 * Numerical *measures*: these will usually be the monetary amounts in the spending data
-* Dimensions including common ones like:
-  * Dates / times: almost all spending data has a temporal aspect.
-  * Payor and Payee: entities spending or receiving money
-  * Project / Programs: expenditure is often linked to a specific project or program
-  * Taxonomies or classifications: expenditure is often classified in standard ways
+* Dimensions: dimensions cover all items othe than the measure
+  * In OLAP attributes is also used for dimensions that are "single-valued" - for example, a description field.
 
 From an OLAP perspective many of these dimensions may not split out in actual separate tables but map to attributes on the fact table if they are very simple (e.g. a given classification may just be a single field).
 
@@ -236,6 +245,9 @@ A dimension has the structure:
 
 ```
 "dimension-name": {
+  # dimensionType is optional
+  # it can be used to indicate this is a standard types e.g. entity, classification, program etc
+  "dimensionType": "
   "fields": {
     "field-1": ...,
     "field-2": ...
@@ -244,7 +256,7 @@ A dimension has the structure:
 }
 ```
 
-Each `field` is a property on the dimension - think of it as column on that dimension in a database. At a minimum it must have "source" information - i.e. where the data comes from for that property:
+Each `field` is a property on the dimension - think of it as column on that dimension in a database. At a minimum it must have "source" information - i.e. where the data comes from for that property (see "Describing Sources" above):
 
 ```
 "field-1": {
@@ -263,9 +275,76 @@ A dimension MUST have at least one field with the property `primaryKey` set on i
 
 #### Common Dimensions
 
+We illustrate here certain common dimensions
+
 **`date`**
 
-An **attribute** that declares the date of the transaction.
+```
+"date": {
+# note the list of fields is for illustration - you can have any fields you like
+  "fields": {
+    "year": "source field name"
+  }
+}
+```
+
+**`description`**
+
+```
+"description": {
+# note the list of fields is for illustration - you can have any fields you like
+  "fields": {
+    "description": "description source field name"
+  }
+}
+```
+
+**`payer`**
+
+```
+# note the list of fields is for illustration - you can have any fields you like
+"payer": {
+  "fields": {
+    "id": {
+      "source": "entity_id"
+    },
+    "title": {
+      "source": "entity_name"
+    },
+    "description": {
+      "source": "entities/about"
+    }
+  }
+  ...
+}
+```
+
+**`payee`**
+
+```
+"payee": {
+  # as per payer ...
+}
+```
+
+**`classification`**
+
+Classifications do not have any standardized name, If the classification is a well-known and standardized one, then it is conventional to use the name of that classification e.g. for COFOG the dimension would be called `cofog`.
+
+```
+# this is a made-up name for the dimension - you could call your dimension anything
+"function": {
+  "dimensionType": "classification",
+  "fields": {
+    "id": {
+      "source": "budget_tree_id"
+    }
+    "title": {
+      "source": "budget_tree_label"
+    }
+  }
+}
+```
 
 ## Examples
 
@@ -283,7 +362,7 @@ Here is the most basic example of an OpenSpending Data Package. The example desc
 
 ### Example with entities (denormalized)
 
-Here is an example with information on the payor and payee, denormalized.
+Here is an example with information on the payer and payee, denormalized.
 
 ```
 # budget.csv
