@@ -33,7 +33,15 @@ This proposal assumes some familiarity with fiscal data - e.g. budgets, spending
 
 Often, this data takes the form of rows in a spreadsheet or database with each row describing some kind of expenditure or receipt of money. The data can get considerably more complex but keep this simple model in mind for what follows.
 
-TODO: simple ascii diagram of a classic spreadsheet
+```
++--------+------+------------+------------+
+| Amount | Year | Department | Spend Type |
++--------+------+------------+------------+
+| 1500   | 2014 | Education  |   Capital  |
++--------+------+------------+------------+
+| ....
++-----
+```
 
 This proposal also builds one and reuses the [Data Package][dp] specifications. These are a family of simple, lightweight formats for publishing data. If you are unfamiliar with these more information can be found in the Appendix.
 
@@ -42,9 +50,9 @@ This proposal also builds one and reuses the [Data Package][dp] specifications. 
 An OpenSpending Data Package has a simple structure:
 
 * Data: the data MUST be stored in CSV files.
-* Descriptor: there must a descriptor for the data and the "package" as a whole (e.g. who created it, high-level description etc). This comes in the form of a single `datapackage.json` file.
+* Descriptor: there must a descriptor in the form of a single `datapackage.json` file. This file describes both the data and the "package" as a whole (e.g. who created it, high-level description etc).
 
-OpenSpending Data Package builds on the existing [Data Package][dp] specifications. In particular, OpenSpending is a Tabular Data Package which is, in turn, a Data Package. Specifically, an OpenSpending Data Package package MUST be a valid [Data Package][dp] and MUST be a valid [Tabular Data Package][tdp]. We will spell out key implications of this as we proceed.
+OpenSpending Data Package builds on the existing [Data Package][dp] specifications. In particular, OpenSpending is a [Tabular Data Package][tdp] which is, in turn, a Data Package. We will spell out key implications of this as we proceed.
 
 Here's an overview diagram that not only illustrates the basic setup but also the relation with the Data Package specifications:
 
@@ -118,10 +126,12 @@ We will detail each in turn.
 
 ## General Package Metadata
 
-The following properties `MUST` be on the top-level descriptor:
+This follows [Data Pacakge][dp]. In particular, the following properties `MUST` be on the top-level descriptor:
 
 * `name` (DP): a url-compatible short name ("slug") for the package
 * `title` (DP): a human readable title for the package
+
+The [Data Package specification][dp] list various additional potential metadata properties including information on licensing, package authors and much more. Here we focus on detailing additional properties specific added in this specification:
 
 The following properties `SHOULD` be on the top-level descriptor:
 
@@ -146,12 +156,14 @@ The Data Package MUST have a `resources` property.
 
 The definition and behaviour of the `resources` property is described in detail in the [Data Package][dp-resources] and [Tabular Data Package][tdp] specifications.
 
-The only point we emphasize here is that each data file MUST have an entry in the `resources` array.
+The two key points we emphasize here from the [Tabular Data Package specification][tdp] are:
 
+* Each data file MUST have an entry in the `resources` array
+* That entry in the resources array MUST have a [JSON Table Schema][jts] schema describing the data file
 
 ## Mapping
 
-The OpenSpending Data Package MUST provide a `mapping` property.  `mapping` MUST be a hash.
+The OpenSpending Data Package MUST provide a `mapping` property. `mapping` MUST be a hash.
 
 The `mapping` hash provides a way to derive our logical model from the physical model represented by the package's resources.
 
