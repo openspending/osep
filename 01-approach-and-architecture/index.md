@@ -100,15 +100,15 @@ Key aspects of the proposed approach:
 
 ### Components Overview
 
-<img src="img/01-tech-overview.png" alt="" style="display: block; width: 100%;" />
+<img src="../img/01-tech-overview.png" alt="" style="display: block; width: 100%;" />
 
 ### Components and Micro-Service Subcomponents
 
-<img src="img/01-tech-overview-subcomponents.png" alt="" />
+<img src="../img/01-tech-overview-subcomponents.png" alt="" />
 
 ### Subcomponents Simplified with Flow of Data
 
-<img src="img/01-subcomponents-flow.png" alt="" />
+<img src="../img/01-subcomponents-flow.png" alt="" />
 
 ------
 
